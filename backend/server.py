@@ -34,7 +34,8 @@ app.add_middleware(
 )
 
 class SearchRequest(BaseModel):
-    ean: str
+    ean: Optional[str] = None
+    sku: Optional[str] = None
     auto_generate: Optional[bool] = True
 
 @app.get("/api/health")
