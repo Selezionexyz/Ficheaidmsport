@@ -107,64 +107,79 @@
 ## frontend:
   - task: "EAN Search Functionality"
     implemented: true
-    working: "NA"
+    working: false
     file: "frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "user"
           comment: "User requests testing EAN search with valid code (3614270357637) and verify product creation"
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL: EAN search fails with 'Method Not Allowed' error. Backend API endpoint /api/generate/product is not responding correctly. Frontend UI loads properly but backend integration is broken."
 
   - task: "Tab Navigation System"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "user"
           comment: "User requests testing tab switching between Produits and Fiches Créées tabs"
+        - working: true
+          agent: "testing"
+          comment: "✅ Tab navigation works perfectly. All three tabs (Recherche EAN, Produits, Fiches Créées) switch correctly with proper visual feedback and content display."
 
   - task: "Automatic Generation Toggle"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "user"
           comment: "User requests testing checkbox for automatic sheet generation functionality"
+        - working: true
+          agent: "testing"
+          comment: "✅ Automatic generation checkbox works correctly. Can be toggled on/off and maintains state properly."
 
   - task: "EAN Example Buttons"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "user"
           comment: "User requests testing example EAN code buttons to verify they populate the input field"
+        - working: true
+          agent: "testing"
+          comment: "✅ EAN example buttons work perfectly. All three example codes (3614270357637, 4064037884942, 1234567890123) populate the input field correctly when clicked."
 
 ## backend:
   - task: "Backend API Integration"
     implemented: true
-    working: "NA"
+    working: false
     file: "backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "user"
           comment: "Backend now uses JSON storage instead of MongoDB and should work perfectly"
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL: Backend API is not responding correctly. POST requests to /api/generate/product return 'Method Not Allowed' error. Backend server may not be running or endpoints are not properly configured."
 
 ## metadata:
   created_by: "main_agent"
