@@ -55,17 +55,44 @@ def get_sheets():
 @app.post("/api/search")
 def search_product(request: SearchRequest):
     try:
-        # Validation EAN
-        if len(request.ean) != 13 or not request.ean.isdigit():
-            raise HTTPException(status_code=400, detail="EAN invalide")
+        search_term = ""
+        search_type = ""
         
-        # Créer produit factice
+        if request.ean:
+            if len(request.ean) != 13 or not request.ean.isdigit():
+                raise HTTPException(status_code=400, detail="EAN invalide - doit contenir 13 chiffres")
+            search_term = request.ean
+            search_type = "EAN"
+        elif request.sku:
+            search_term = request.sku.strip()
+            search_type = "SKU"
+        else:
+            raise HTTPException(status_code=400, detail="Veuillez fournir un EAN ou un SKU")
+        
+        # Créer produit avec les bonnes infos selon le type de recherche
+        if search_type == "EAN":
+            product_name = f"Produit EAN {search_term[:6]}"
+            brand = "Nike" if search_term.startswith("36") else "Adidas" if search_term.startswith("40") else "Autre"
+            sku = f"SKU-{search_term[:8]}"
+        else:
+            # Recherche par SKU - exemple pour polo Lacoste
+            if "lacoste" in search_term.lower() or "polo" in search_term.lower():
+                product_name = f"Polo Lacoste {search_term}"
+                brand = "Lacoste"
+            else:
+                product_name = f"Produit {search_term}"
+                brand = "Marque inconnue"
+            sku = search_term
+        
         product = {
             "id": str(uuid.uuid4()),
-            "ean": request.ean,
-            "name": f"Produit {request.ean[:6]}",
-            "brand": "Nike" if request.ean.startswith("36") else "Adidas",
-            "price": 99.99,
+            "ean": request.ean if request.ean else f"EAN-{uuid.uuid4().hex[:13].upper()}",
+            "sku": sku,
+            "name": product_name,
+            "brand": brand,
+            "price": 89.99 if "lacoste" in product_name.lower() else 99.99,
+            "search_type": search_type,
+            "search_term": search_term,
             "created_at": datetime.now().isoformat()
         }
         
@@ -79,9 +106,12 @@ def search_product(request: SearchRequest):
             sheet = {
                 "id": str(uuid.uuid4()),
                 "product_id": product["id"],
-                "ean": request.ean,
+                "ean": product["ean"],
+                "sku": product["sku"],
                 "title": f"Fiche - {product['name']}",
-                "description": f"Fiche produit générée pour {product['name']}",
+                "description": f"Fiche produit générée pour {product['name']} (recherché par {search_type}: {search_term})",
+                "brand": product["brand"],
+                "price": product["price"],
                 "created_at": datetime.now().isoformat()
             }
             data["sheets"].append(sheet)
@@ -92,7 +122,7 @@ def search_product(request: SearchRequest):
             "success": True,
             "product": product,
             "sheet": sheet,
-            "message": "Produit trouvé et traité !"
+            "message": f"Produit trouvé par {search_type} et traité !"
         }
         
     except Exception as e:
