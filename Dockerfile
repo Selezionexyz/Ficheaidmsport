@@ -7,8 +7,8 @@ WORKDIR /app/frontend
 # Copy package files and install dependencies
 COPY frontend/package.json frontend/yarn.lock ./
 
-# Install yarn if not present and install dependencies
-RUN npm install -g yarn@latest
+# Enable corepack (built-in package manager for Node.js 20)
+RUN corepack enable
 RUN yarn install --frozen-lockfile --production=false
 
 # Copy frontend source code
