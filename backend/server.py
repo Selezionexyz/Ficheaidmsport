@@ -281,6 +281,14 @@ from pathlib import Path
 import uuid
 from datetime import datetime
 
+# Initialize Google Search Service
+try:
+    google_search_service = GoogleCustomSearchService()
+    print("✅ Google Custom Search Service initialisé")
+except Exception as e:
+    print(f"⚠️ Google Search Service erreur: {e}")
+    google_search_service = None
+
 # Simple data storage
 data_file = Path(__file__).parent / "data.json"
 
