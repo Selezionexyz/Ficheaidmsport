@@ -757,6 +757,24 @@ async def get_stats():
 # Include router
 app.include_router(api_router)
 
+# Servir le frontend React (pour production)
+frontend_path = Path(__file__).parent.parent / "frontend" / "build"
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_path / "static")), name="static")
+    
+    @app.get("/")
+    async def serve_frontend():
+        return FileResponse(str(frontend_path / "index.html"))
+    
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Si c'est un fichier statique, le servir
+        file_path = frontend_path / full_path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(str(file_path))
+        # Sinon, servir index.html pour le routing SPA
+        return FileResponse(str(frontend_path / "index.html"))
+
 # CORS
 app.add_middleware(
     CORSMiddleware,
