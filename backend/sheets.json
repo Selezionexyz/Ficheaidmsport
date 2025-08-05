@@ -60,5 +60,67 @@
     ],
     "created_at": "2025-08-05T20:58:45.907877",
     "status": "generated"
+  },
+  {
+    "id": "41d7866d-0d07-436b-9ce5-53079192eeeb",
+    "ean": "3614270357637",
+    "name": "Produit EAN 3614270357637",
+    "brand": "Nike",
+    "type": "Chaussures de sport",
+    "reference": "REF-36142703",
+    "price": 89.99,
+    "description": "Produit trouvé pour le code EAN 3614270357637",
+    "characteristics": {
+      "color": "Noir/Blanc",
+      "material": "Textile synthétique",
+      "season": "Toute saison",
+      "gender": "Mixte"
+    },
+    "variations": [
+      {
+        "size": "36",
+        "stock": 10
+      },
+      {
+        "size": "37",
+        "stock": 15
+      },
+      {
+        "size": "38",
+        "stock": 20
+      },
+      {
+        "size": "39",
+        "stock": 25
+      },
+      {
+        "size": "40",
+        "stock": 30
+      },
+      {
+        "size": "41",
+        "stock": 25
+      },
+      {
+        "size": "42",
+        "stock": 20
+      },
+      {
+        "size": "43",
+        "stock": 15
+      },
+      {
+        "size": "44",
+        "stock": 10
+      }
+    ],
+    "weight": 0.8,
+    "photos": [
+      "https://via.placeholder.com/400x400/000000/FFFFFF?text=Photo1",
+      "https://via.placeholder.com/400x400/333333/FFFFFF?text=Photo2",
+      "https://via.placeholder.com/400x400/666666/FFFFFF?text=Photo3"
+    ],
+    "created_at": "2025-08-05T21:09:28.330016",
+    "status": "generated"
   }
 ]

@@ -9,5 +9,16 @@
     "price": 89.99,
     "created_at": "2025-08-05T20:58:45.907524",
     "status": "found"
+  },
+  {
+    "id": "734a91f4-dbea-4175-a012-5d2067a5fe85",
+    "ean": "3614270357637",
+    "name": "Produit EAN 3614270357637",
+    "brand": "Nike",
+    "type": "Chaussures de sport",
+    "description": "Produit trouvé pour le code EAN 3614270357637",
+    "price": 89.99,
+    "created_at": "2025-08-05T21:09:28.329558",
+    "status": "found"
   }
 ]
