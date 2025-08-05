@@ -13,6 +13,20 @@
       "search_term": "3608077027028",
       "confidence": 50.0,
       "created_at": "2025-08-05T22:11:38.119296"
+    },
+    {
+      "id": "40c13dff-180d-42ad-ae42-b18bdb1201f7",
+      "ean": "EAN-3CAB8E3154CF4",
+      "sku": "49SMA0006-02H",
+      "name": "Produit 49SMA000",
+      "brand": "Lacoste",
+      "type": "Produit",
+      "price": 49.99,
+      "description": "Produit identifi\u00e9 par code 49SMA0006-02H",
+      "search_type": "SKU",
+      "search_term": "49SMA0006-02H",
+      "confidence": 50.0,
+      "created_at": "2025-08-05T22:11:52.036348"
     }
   ],
   "sheets": [
@@ -55,6 +69,86 @@
       "show_price": true,
       "online_only": false,
       "created_at": "2025-08-05T22:11:38.119366"
+    },
+    {
+      "id": "bc451420-5a53-4f6a-872d-7ccf45372509",
+      "product_id": "40c13dff-180d-42ad-ae42-b18bdb1201f7",
+      "ean": "EAN-3CAB8E3154CF4",
+      "sku": "49SMA0006-02H",
+      "title": "Fiche PrestaShop - Produit 49SMA000",
+      "description": "Produit identifi\u00e9 par code 49SMA0006-02H",
+      "brand": "Lacoste",
+      "type": "Produit",
+      "price": 49.99,
+      "characteristics": {
+        "Mati\u00e8re": "100% Coton piqu\u00e9",
+        "Coupe": "Classic Fit",
+        "Col": "Polo avec 2 boutons nacr\u00e9s",
+        "Logo": "Crocodile Lacoste brod\u00e9 poitrine gauche",
+        "Manches": "Manches courtes",
+        "Entretien": "Lavage machine 30\u00b0C, repassage doux",
+        "Origine": "Fabriqu\u00e9 en France/Portugal"
+      },
+      "variations": [
+        {
+          "taille": "S",
+          "couleur": "Blanc",
+          "stock": 15,
+          "ean_variant": "EAN-3CAB8E3154CF1"
+        },
+        {
+          "taille": "M",
+          "couleur": "Blanc",
+          "stock": 20,
+          "ean_variant": "EAN-3CAB8E3154CF2"
+        },
+        {
+          "taille": "L",
+          "couleur": "Blanc",
+          "stock": 18,
+          "ean_variant": "EAN-3CAB8E3154CF3"
+        },
+        {
+          "taille": "XL",
+          "couleur": "Blanc",
+          "stock": 12,
+          "ean_variant": "EAN-3CAB8E3154CF4"
+        },
+        {
+          "taille": "S",
+          "couleur": "Marine",
+          "stock": 10,
+          "ean_variant": "EAN-3CAB8E3154CF5"
+        },
+        {
+          "taille": "M",
+          "couleur": "Marine",
+          "stock": 25,
+          "ean_variant": "EAN-3CAB8E3154CF6"
+        },
+        {
+          "taille": "L",
+          "couleur": "Marine",
+          "stock": 22,
+          "ean_variant": "EAN-3CAB8E3154CF7"
+        },
+        {
+          "taille": "XL",
+          "couleur": "Marine",
+          "stock": 15,
+          "ean_variant": "EAN-3CAB8E3154CF8"
+        }
+      ],
+      "weight": 0.25,
+      "category": "Produits > Produit",
+      "seo_title": "Lacoste Produit 49SMA000 - Produit",
+      "seo_description": "Achetez Produit 49SMA000 de Lacoste au meilleur prix. Produit identifi\u00e9 par code 49SMA0006-02H",
+      "meta_keywords": "Lacoste, Produit 49SMA000, Produit, 49SMA0006-02H",
+      "visibility": "both",
+      "available_for_order": true,
+      "show_price": true,
+      "online_only": false,
+      "created_at": "2025-08-05T22:11:52.036552"
     }
   ]
 }
