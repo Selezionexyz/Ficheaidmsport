@@ -200,3 +200,5 @@
 ## agent_communication:
     - agent: "testing"
       message: "Starting comprehensive testing of Générateur de Fiches Produits application. Will test EAN search, tab navigation, automatic generation toggle, and example buttons as requested by user."
+    - agent: "testing"
+      message: "TESTING COMPLETED: Frontend UI components work perfectly (tabs, buttons, toggles) but CRITICAL backend API failure. EAN search returns 'Method Not Allowed' error. Backend server needs investigation - may not be running or endpoints misconfigured."
