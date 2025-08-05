@@ -1,0 +1,60 @@
+{
+  "products": [
+    {
+      "id": "8731ba38-a855-4bed-9a1a-6988270d3d98",
+      "ean": "3608077027028",
+      "sku": "SKU-36080770",
+      "name": "Produit 36080770",
+      "brand": "Nike",
+      "type": "Produit",
+      "price": 49.99,
+      "description": "Produit identifi\u00e9 par code 3608077027028",
+      "search_type": "EAN",
+      "search_term": "3608077027028",
+      "confidence": 50.0,
+      "created_at": "2025-08-05T22:11:38.119296"
+    }
+  ],
+  "sheets": [
+    {
+      "id": "b2cf1e10-1eb7-4cbf-823a-97397336930d",
+      "product_id": "8731ba38-a855-4bed-9a1a-6988270d3d98",
+      "ean": "3608077027028",
+      "sku": "SKU-36080770",
+      "title": "Fiche PrestaShop - Produit 36080770",
+      "description": "Produit identifi\u00e9 par code 3608077027028",
+      "brand": "Nike",
+      "type": "Produit",
+      "price": 49.99,
+      "characteristics": {
+        "Mati\u00e8re": "Selon sp\u00e9cifications fabricant",
+        "Qualit\u00e9": "Standard europ\u00e9en",
+        "Garantie": "Garantie constructeur",
+        "Entretien": "Selon notice produit"
+      },
+      "variations": [
+        {
+          "option": "Standard",
+          "stock": 20,
+          "ean_variant": "3608077027028"
+        },
+        {
+          "option": "Premium",
+          "stock": 10,
+          "ean_variant": "3608077027029",
+          "price_modifier": 10.0
+        }
+      ],
+      "weight": 0.5,
+      "category": "Produits > Produit",
+      "seo_title": "Nike Produit 36080770 - Produit",
+      "seo_description": "Achetez Produit 36080770 de Nike au meilleur prix. Produit identifi\u00e9 par code 3608077027028",
+      "meta_keywords": "Nike, Produit 36080770, Produit, SKU-36080770",
+      "visibility": "both",
+      "available_for_order": true,
+      "show_price": true,
+      "online_only": false,
+      "created_at": "2025-08-05T22:11:38.119366"
+    }
+  ]
+}
