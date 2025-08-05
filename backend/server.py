@@ -21,7 +21,10 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection with OpenSSL 3.0 compatibility
-mongo_url = os.environ['MONGO_URL']
+mongo_url = os.environ.get('MONGO_URL')
+if not mongo_url:
+    raise ValueError("MONGO_URL environment variable is required")
+
 # Add SSL configuration for OpenSSL 3.0 compatibility
 if 'mongodb+srv://' in mongo_url:
     # For MongoDB Atlas connections, add specific SSL parameters
@@ -29,8 +32,11 @@ if 'mongodb+srv://' in mongo_url:
         separator = '&' if '?' in mongo_url else '?'
         mongo_url += f"{separator}tlsAllowInvalidCertificates=true&ssl_cert_reqs=0"
 
+print(f"Connecting to MongoDB: {mongo_url[:50]}...")
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db_name = os.environ.get('DB_NAME', 'product_db')
+db = client[db_name]
+print(f"Connected to database: {db_name}")
 
 # API Keys
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', 'your_openai_key_here')
