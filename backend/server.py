@@ -20,6 +20,29 @@ import re
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# JSON file storage paths
+PRODUCTS_FILE = ROOT_DIR / 'data' / 'products.json'
+SHEETS_FILE = ROOT_DIR / 'data' / 'sheets.json'
+
+# Ensure data directory exists
+(ROOT_DIR / 'data').mkdir(exist_ok=True)
+
+# JSON file helper functions
+def load_json_file(file_path: Path) -> list:
+    """Load data from JSON file, return empty list if file doesn't exist"""
+    if not file_path.exists():
+        return []
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError):
+        return []
+
+def save_json_file(file_path: Path, data: list) -> None:
+    """Save data to JSON file"""
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
 # MongoDB connection with OpenSSL 3.0 compatibility
 mongo_url = os.environ.get('MONGO_URL')
 if not mongo_url:
