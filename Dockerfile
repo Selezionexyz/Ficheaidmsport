@@ -5,8 +5,11 @@ FROM node:20-alpine as frontend-builder
 WORKDIR /app/frontend
 
 # Copy package files and install dependencies
-COPY frontend/package.json frontend/package-lock.json* ./
-RUN npm ci --only=production
+COPY frontend/package.json frontend/yarn.lock ./
+
+# Install yarn if not present and install dependencies
+RUN npm install -g yarn@latest
+RUN yarn install --frozen-lockfile --production=false
 
 # Copy frontend source code
 COPY frontend/ ./
@@ -17,7 +20,7 @@ ENV CI=false
 ENV GENERATE_SOURCEMAP=false
 
 # Build the frontend
-RUN npm run build
+RUN yarn build
 
 # Python backend stage
 FROM python:3.11-slim
