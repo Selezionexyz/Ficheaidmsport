@@ -336,6 +336,7 @@ def serve_frontend():
                         <span class="text-xs text-gray-500">SKU:</span>
                         <div class="flex flex-wrap gap-2">
                             <button onclick="setSKU('POLO-LACOSTE-001')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm">POLO-LACOSTE-001</button>
+                            <button onclick="setSKU('49SMA0006-02H')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm">49SMA0006-02H</button>
                             <button onclick="setSKU('NIKE-AIR-MAX-90')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm">NIKE-AIR-MAX-90</button>
                         </div>
                     </div>
