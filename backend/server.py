@@ -159,6 +159,9 @@ class EANGenerateRequest(BaseModel):
     ean_code: str
     generate_sheet: bool = True
 
+class ProductSearch(BaseModel):
+    ean: str
+
 # ===== SERVICES =====
 
 class GoogleSearchService:
