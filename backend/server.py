@@ -656,27 +656,40 @@ async def generate_product_from_ean(request: EANGenerateRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/products")
-async def get_products():
-    """Get all products - MOCKDATA for testing"""
-    return {
-        "products": [
-            {
-                "id": "test1",
-                "name": "Nike Air Max Test",
-                "ean": "123456789012",
-                "price": 99.99,
-                "status": "active"
-            },
-            {
-                "id": "test2", 
-                "name": "Adidas Test",
-                "ean": "987654321098",
-                "price": 79.99,
-                "status": "active"
-            }
-        ],
-        "total": 2
+def get_products():
+    """Get all products - JSON FILE STORAGE"""
+    products = load_json_file(PRODUCTS_FILE)
+    return {"products": products, "total": len(products)}
+
+@api_router.get("/sheets")
+def get_sheets():
+    """Get all product sheets - JSON FILE STORAGE"""
+    sheets = load_json_file(SHEETS_FILE)
+    return {"sheets": sheets, "total": len(sheets)}
+
+@api_router.post("/search")
+def search_ean(product_search: ProductSearch):
+    """Search EAN - WORKING WITHOUT DATABASE"""
+    ean = product_search.ean.strip()
+    
+    # Mock data for immediate testing
+    mock_product = {
+        "id": str(uuid.uuid4()),
+        "ean": ean,
+        "name": f"Produit Test {ean[:6]}",
+        "brand": "Nike",
+        "type": "Chaussures",
+        "price": 99.99,
+        "description": "Produit de test généré automatiquement",
+        "created_at": datetime.now().isoformat()
     }
+    
+    # Save to JSON
+    products = load_json_file(PRODUCTS_FILE)
+    products.append(mock_product)
+    save_json_file(PRODUCTS_FILE, products)
+    
+    return {"success": True, "product": mock_product}
 
 @api_router.get("/products/{product_id}", response_model=Product)
 async def get_product(product_id: str):
