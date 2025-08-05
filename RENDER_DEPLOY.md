@@ -4,9 +4,10 @@
 
 ### **Problèmes Identifiés et Résolus:**
 1. **❌ Node.js 18** → **✅ Node.js 20 LTS** (compatible react-scripts)
-2. **❌ Manque d'optimisation mémoire** → **✅ NODE_OPTIONS="--max-old-space-size=4096"**
-3. **❌ Variables d'environnement build manquantes** → **✅ CI=false, GENERATE_SOURCEMAP=false**
-4. **❌ Diagnostic insuffisant** → **✅ Script de démarrage avec vérifications complètes**
+2. **❌ npm build conflicts** → **✅ Multi-stage Docker build with yarn**
+3. **❌ package.json/yarn.lock conflicts** → **✅ Removed package-lock.json, using yarn only**
+4. **❌ Variables d'environnement build manquantes** → **✅ CI=false, GENERATE_SOURCEMAP=false**
+5. **❌ Diagnostic insuffisant** → **✅ Script de démarrage avec vérifications complètes**
 
 ### **Architecture Final:**
 - **Frontend**: React 18.3.1 + react-scripts 5.0.1 ✅
