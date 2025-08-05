@@ -2,7 +2,7 @@
 # Multi-stage build : Frontend React + Backend FastAPI
 
 # ===== ÉTAPE 1: Build du Frontend React =====
-FROM node:18-alpine AS frontend-build
+FROM node:20-alpine AS frontend-build
 
 # Installation des dépendances système pour le build
 RUN apk add --no-cache python3 make g++
@@ -15,7 +15,7 @@ COPY frontend/package.json ./package.json
 COPY frontend/yarn.lock ./yarn.lock
 
 # Installation des dépendances Node.js avec timeout étendu
-RUN yarn install --network-timeout 600000 --frozen-lockfile
+RUN yarn install --network-timeout 600000
 
 # Copie du code source frontend
 COPY frontend/ ./
