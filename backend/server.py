@@ -30,10 +30,10 @@ OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', 'your_openai_key_here')
 GOOGLE_SEARCH_API_KEY = os.environ.get('GOOGLE_SEARCH_API_KEY', 'your_google_search_key_here')
 GOOGLE_SEARCH_CX = os.environ.get('GOOGLE_SEARCH_CX', 'your_google_cx_here')
 
-# Configure OpenAI client
+# Configure OpenAI client (TEMPORARILY DISABLED for testing)
 openai_client = None
-if OPENAI_API_KEY and OPENAI_API_KEY != 'your_openai_key_here':
-    openai_client = OpenAI(api_key=OPENAI_API_KEY)
+# if OPENAI_API_KEY and OPENAI_API_KEY != 'your_openai_key_here':
+#     openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Create the main app
 app = FastAPI(
