@@ -263,6 +263,12 @@ def serve_frontend():
     <script>
         function setEAN(ean) {
             document.getElementById('eanCode').value = ean;
+            document.getElementById('skuCode').value = '';
+        }
+
+        function setSKU(sku) {
+            document.getElementById('skuCode').value = sku;
+            document.getElementById('eanCode').value = '';
         }
 
         function showMessage(text, type = 'success') {
@@ -275,16 +281,22 @@ def serve_frontend():
 
         async function handleSearch() {
             const eanCode = document.getElementById('eanCode').value.trim();
+            const skuCode = document.getElementById('skuCode').value.trim();
             const autoGenerate = document.getElementById('autoGenerate').checked;
             const searchBtn = document.getElementById('searchBtn');
             const resultsDiv = document.getElementById('results');
 
-            if (!eanCode) {
-                showMessage('Veuillez saisir un code EAN', 'error');
+            if (!eanCode && !skuCode) {
+                showMessage('Veuillez saisir soit un code EAN, soit un SKU', 'error');
                 return;
             }
 
-            if (eanCode.length !== 13) {
+            if (eanCode && skuCode) {
+                showMessage('Veuillez saisir soit un EAN, soit un SKU - pas les deux', 'error');
+                return;
+            }
+
+            if (eanCode && eanCode.length !== 13) {
                 showMessage('Le code EAN doit contenir 13 chiffres', 'error');
                 return;
             }
@@ -293,19 +305,25 @@ def serve_frontend():
             searchBtn.disabled = true;
 
             try {
+                const searchData = {};
+                if (eanCode) {
+                    searchData.ean = eanCode;
+                } else {
+                    searchData.sku = skuCode;
+                }
+                searchData.auto_generate = autoGenerate;
+
                 const response = await fetch('/api/search', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        ean: eanCode,
-                        auto_generate: autoGenerate
-                    })
+                    body: JSON.stringify(searchData)
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Erreur: ${response.status}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `Erreur: ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -313,21 +331,26 @@ def serve_frontend():
                 if (data.success) {
                     showMessage(data.message, 'success');
                     document.getElementById('eanCode').value = '';
+                    document.getElementById('skuCode').value = '';
                     
                     resultsDiv.innerHTML = `
                         <div class="space-y-4">
                             <div class="bg-green-50 p-4 rounded-lg">
                                 <h3 class="font-semibold text-green-800">✅ Produit trouvé</h3>
                                 <p><strong>Nom:</strong> ${data.product.name}</p>
-                                <p><strong>EAN:</strong> ${data.product.ean}</p>  
+                                <p><strong>EAN:</strong> ${data.product.ean}</p>
+                                <p><strong>SKU:</strong> ${data.product.sku}</p>
                                 <p><strong>Marque:</strong> ${data.product.brand}</p>
                                 <p><strong>Prix:</strong> ${data.product.price}€</p>
+                                <p><strong>Recherché par:</strong> ${data.product.search_type}</p>
                             </div>
                             ${data.sheet ? `
                             <div class="bg-blue-50 p-4 rounded-lg">
                                 <h3 class="font-semibold text-blue-800">📄 Fiche générée</h3>
                                 <p><strong>Titre:</strong> ${data.sheet.title}</p>
                                 <p><strong>Description:</strong> ${data.sheet.description}</p>
+                                <p><strong>SKU:</strong> ${data.sheet.sku}</p>
+                                <p><strong>Prix:</strong> ${data.sheet.price}€</p>
                             </div>
                             ` : ''}
                         </div>
@@ -343,6 +366,12 @@ def serve_frontend():
 
         // Allow Enter key
         document.getElementById('eanCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+        
+        document.getElementById('skuCode').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 handleSearch();
             }
