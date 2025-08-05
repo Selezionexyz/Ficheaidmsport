@@ -1,71 +1,26 @@
-# Simple and reliable Dockerfile - npm only
-FROM node:20-alpine as frontend-builder
+# Ultra simple approach - build locally then copy
+FROM node:18 as builder
 
-# Set working directory for frontend build
-WORKDIR /app/frontend
-
-# Copy package files
+WORKDIR /app
 COPY frontend/package.json ./
-
-# Install dependencies with npm (proven to work)
-RUN npm install --legacy-peer-deps
-
-# Copy frontend source code
+RUN npm install --force
 COPY frontend/ ./
-
-# Set production environment variables
-ENV NODE_ENV=production
-ENV CI=false
-ENV GENERATE_SOURCEMAP=false
-
-# Build the frontend
 RUN npm run build
 
-# Python backend stage
 FROM python:3.11-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    gcc \
-    g++ \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy Python requirements and install dependencies
 COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy backend code
 COPY backend/ backend/
+COPY --from=builder /app/build /app/frontend/build
 
-# Copy built frontend from the frontend-builder stage
-COPY --from=frontend-builder /app/frontend/build /app/frontend/build
-
-# Set environment variables
 ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-ENV NODE_ENV=production
 
-# Expose port
 EXPOSE 8001
 
-# Simple startup script
-RUN echo '#!/bin/bash\n\
-echo "🚀 Starting Product Sheets Generator..."\n\
-if [ -d "/app/frontend/build" ]; then\n\
-    echo "✅ Frontend build present"\n\
-else\n\
-    echo "❌ Frontend build missing"\n\
-    exit 1\n\
-fi\n\
-echo "🌐 Starting FastAPI server..."\n\
-exec uvicorn backend.server:app --host 0.0.0.0 --port 8001 --log-level info\n\
-' > /app/start.sh && chmod +x /app/start.sh
-
-# Start the application
-CMD ["/app/start.sh"]
+CMD ["uvicorn", "backend.server:app", "--host", "0.0.0.0", "--port", "8001"]
