@@ -162,26 +162,47 @@ def search_product(request: SearchRequest):
         # Générer fiche si demandé
         sheet = None
         if request.auto_generate:
-            # Fiche plus détaillée pour Lacoste
+            # Générer fiche si demandé
             if brand == "Lacoste":
-                characteristics = {
-                    "Matière": "100% Coton piqué",
-                    "Coupe": "Classic Fit",
-                    "Col": "Polo avec 2 boutons",
-                    "Logo": "Crocodile brodé poitrine gauche",
-                    "Entretien": "Lavage machine 30°C",
-                    "Origine": "Fabriqué en France/Portugal"
-                }
-                variations = [
-                    {"taille": "S", "couleur": "Blanc", "stock": 15},
-                    {"taille": "M", "couleur": "Blanc", "stock": 20},
-                    {"taille": "L", "couleur": "Blanc", "stock": 18},
-                    {"taille": "XL", "couleur": "Blanc", "stock": 12},
-                    {"taille": "S", "couleur": "Marine", "stock": 10},
-                    {"taille": "M", "couleur": "Marine", "stock": 25},
-                    {"taille": "L", "couleur": "Marine", "stock": 22},
-                    {"taille": "XL", "couleur": "Marine", "stock": 15}
-                ]
+                if product_type == "Chaussures":
+                    # Fiche pour sneakers Lacoste
+                    characteristics = {
+                        "Matière": "Cuir et textile",
+                        "Semelle": "Caoutchouc",
+                        "Fermeture": "Lacets",
+                        "Logo": "Crocodile brodé sur le côté",
+                        "Style": "Sneakers basses",
+                        "Entretien": "Nettoyage avec chiffon humide"
+                    }
+                    variations = [
+                        {"pointure": "39", "couleur": "Blanc/Vert", "stock": 8},
+                        {"pointure": "40", "couleur": "Blanc/Vert", "stock": 12},
+                        {"pointure": "41", "couleur": "Blanc/Vert", "stock": 15},
+                        {"pointure": "42", "couleur": "Blanc/Vert", "stock": 20},
+                        {"pointure": "43", "couleur": "Blanc/Vert", "stock": 18},
+                        {"pointure": "44", "couleur": "Blanc/Vert", "stock": 10},
+                        {"pointure": "45", "couleur": "Blanc/Vert", "stock": 6}
+                    ]
+                else:
+                    # Fiche pour polo Lacoste
+                    characteristics = {
+                        "Matière": "100% Coton piqué",
+                        "Coupe": "Classic Fit",
+                        "Col": "Polo avec 2 boutons",
+                        "Logo": "Crocodile brodé poitrine gauche",
+                        "Entretien": "Lavage machine 30°C",
+                        "Origine": "Fabriqué en France/Portugal"
+                    }
+                    variations = [
+                        {"taille": "S", "couleur": "Blanc", "stock": 15},
+                        {"taille": "M", "couleur": "Blanc", "stock": 20},
+                        {"taille": "L", "couleur": "Blanc", "stock": 18},
+                        {"taille": "XL", "couleur": "Blanc", "stock": 12},
+                        {"taille": "S", "couleur": "Marine", "stock": 10},
+                        {"taille": "M", "couleur": "Marine", "stock": 25},
+                        {"taille": "L", "couleur": "Marine", "stock": 22},
+                        {"taille": "XL", "couleur": "Marine", "stock": 15}
+                    ]
             else:
                 characteristics = {
                     "Matière": "Textile",
