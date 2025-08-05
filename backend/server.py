@@ -499,98 +499,219 @@ async def search_product(request: SearchRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 async def generate_advanced_product_sheet(product, product_info):
-    """Générer une fiche produit avancée"""
+    """Générer une fiche produit PROFESSIONNELLE avec SEO"""
     
-    # Caractéristiques selon le type de produit
-    if "lacoste" in product["brand"].lower():
-        if product["type"].lower() in ["chaussures", "sneaker"]:
+    # Caractéristiques détaillées selon le produit réel
+    if product_info.get("specifications"):
+        characteristics = product_info["specifications"]
+    elif "lacoste" in product["brand"].lower():
+        if "sneakers" in product["name"].lower() or product["type"].lower() == "sneakers":
             characteristics = {
-                "Matière": "Cuir et textile synthétique",
-                "Semelle": "Caoutchouc antidérapant",
-                "Fermeture": "Lacets",
-                "Logo": "Crocodile Lacoste brodé",
-                "Style": "Sneakers casual",
-                "Entretien": "Nettoyage avec chiffon humide",
-                "Origine": "Fabriqué en Europe/Asie"
+                "Matière": "Cuir pleine fleur premium",
+                "Doublure": "Polyester recyclé à 100%",
+                "Semelle intérieure": "Polyester confort",
+                "Semelle extérieure": "Caoutchouc antidérapant (86% + 10% recyclé)",
+                "Fermeture": "Lacets ajustables",
+                "Logo": "Crocodile Lacoste brodé authentique",
+                "Style": "Sneakers basses rétro tennis",
+                "Poids": "Environ 520g par chaussure",
+                "Entretien": "Nettoyage cuir avec produits adaptés",
+                "Origine": "Fabriqué sous licence Lacoste",
+                "Certification": "Matériaux recyclés certifiés"
             }
-            variations = [
-                {"pointure": "39", "couleur": "Blanc/Vert", "stock": 8, "ean_variant": f"{product['ean'][:-2]}39"},
-                {"pointure": "40", "couleur": "Blanc/Vert", "stock": 12, "ean_variant": f"{product['ean'][:-2]}40"},
-                {"pointure": "41", "couleur": "Blanc/Vert", "stock": 15, "ean_variant": f"{product['ean'][:-2]}41"},
-                {"pointure": "42", "couleur": "Blanc/Vert", "stock": 20, "ean_variant": f"{product['ean'][:-2]}42"},
-                {"pointure": "43", "couleur": "Blanc/Vert", "stock": 18, "ean_variant": f"{product['ean'][:-2]}43"},
-                {"pointure": "44", "couleur": "Blanc/Vert", "stock": 10, "ean_variant": f"{product['ean'][:-2]}44"},
-                {"pointure": "45", "couleur": "Blanc/Vert", "stock": 6, "ean_variant": f"{product['ean'][:-2]}45"}
-            ]
-            weight = 0.8
+            variations = []
+            colors = product_info.get("colors", ["Blanc/Vert", "Noir/Blanc"])
+            sizes = product_info.get("sizes", ["39", "40", "41", "42", "43", "44", "45"])
+            
+            variant_id = 1
+            for color in colors:
+                for size in sizes:
+                    stock = 20 if size in ["41", "42", "43"] else 15 if size in ["40", "44"] else 10
+                    variations.append({
+                        "id": variant_id,
+                        "pointure": size,
+                        "couleur": color,
+                        "stock": stock,
+                        "ean_variant": f"{product['ean'][:-2]}{variant_id:02d}",
+                        "price_modifier": 0.0 if color == colors[0] else 5.0,
+                        "reference": f"{product['sku']}-{size}-{color.split('/')[0][:2]}"
+                    })
+                    variant_id += 1
+            weight = 1.2
+            category = "Chaussures > Sneakers > Lacoste"
         else:
             # Polo Lacoste
             characteristics = {
-                "Matière": "100% Coton piqué",
-                "Coupe": "Classic Fit",
-                "Col": "Polo avec 2 boutons nacrés",
+                "Matière": "100% Coton piqué premium",
+                "Grammage": "200g/m²",
+                "Coupe": "Classic Fit - Coupe droite",
+                "Col": "Col polo avec 2 boutons nacrés",
+                "Manches": "Manches courtes finition côtes",
                 "Logo": "Crocodile Lacoste brodé poitrine gauche",
-                "Manches": "Manches courtes",
+                "Finitions": "Fentes latérales, ourlets côtes",
                 "Entretien": "Lavage machine 30°C, repassage doux",
-                "Origine": "Fabriqué en France/Portugal"
+                "Certification": "Oeko-Tex Standard 100",
+                "Origine": "Fabriqué en France/Portugal sous licence",
+                "Tailles": "Du S au XXL - Guide des tailles disponible"
             }
             variations = [
-                {"taille": "S", "couleur": "Blanc", "stock": 15, "ean_variant": f"{product['ean'][:-1]}1"},
-                {"taille": "M", "couleur": "Blanc", "stock": 20, "ean_variant": f"{product['ean'][:-1]}2"},
-                {"taille": "L", "couleur": "Blanc", "stock": 18, "ean_variant": f"{product['ean'][:-1]}3"},
-                {"taille": "XL", "couleur": "Blanc", "stock": 12, "ean_variant": f"{product['ean'][:-1]}4"},
-                {"taille": "S", "couleur": "Marine", "stock": 10, "ean_variant": f"{product['ean'][:-1]}5"},
-                {"taille": "M", "couleur": "Marine", "stock": 25, "ean_variant": f"{product['ean'][:-1]}6"},
-                {"taille": "L", "couleur": "Marine", "stock": 22, "ean_variant": f"{product['ean'][:-1]}7"},
-                {"taille": "XL", "couleur": "Marine", "stock": 15, "ean_variant": f"{product['ean'][:-1]}8"}
+                {"taille": "S", "couleur": "Blanc", "stock": 25, "chest_size": "88-96cm", "ean_variant": f"{product['ean'][:-1]}1"},
+                {"taille": "M", "couleur": "Blanc", "stock": 30, "chest_size": "96-104cm", "ean_variant": f"{product['ean'][:-1]}2"},
+                {"taille": "L", "couleur": "Blanc", "stock": 28, "chest_size": "104-112cm", "ean_variant": f"{product['ean'][:-1]}3"},
+                {"taille": "XL", "couleur": "Blanc", "stock": 20, "chest_size": "112-120cm", "ean_variant": f"{product['ean'][:-1]}4"},
+                {"taille": "S", "couleur": "Marine", "stock": 20, "chest_size": "88-96cm", "ean_variant": f"{product['ean'][:-1]}5"},
+                {"taille": "M", "couleur": "Marine", "stock": 35, "chest_size": "96-104cm", "ean_variant": f"{product['ean'][:-1]}6"},
+                {"taille": "L", "couleur": "Marine", "stock": 32, "chest_size": "104-112cm", "ean_variant": f"{product['ean'][:-1]}7"},
+                {"taille": "XL", "couleur": "Marine", "stock": 25, "chest_size": "112-120cm", "ean_variant": f"{product['ean'][:-1]}8"}
             ]
-            weight = 0.25
+            weight = 0.3
+            category = "Vêtements > Polos > Lacoste"
     else:
-        # Produit générique
+        # Produit générique amélioré
         characteristics = {
             "Matière": "Selon spécifications fabricant",
-            "Qualité": "Standard européen",
-            "Garantie": "Garantie constructeur",
-            "Entretien": "Selon notice produit"
+            "Qualité": "Standard européen CE",
+            "Garantie": "Garantie constructeur 2 ans",
+            "Entretien": "Selon notice produit fournie",
+            "Certification": "Normes européennes"
         }
         variations = [
-            {"option": "Standard", "stock": 20, "ean_variant": product['ean']},
-            {"option": "Premium", "stock": 10, "ean_variant": f"{product['ean'][:-1]}9", "price_modifier": 10.0}
+            {"option": "Standard", "stock": 25, "ean_variant": product['ean'], "price_modifier": 0.0},
+            {"option": "Premium", "stock": 15, "ean_variant": f"{product['ean'][:-1]}9", "price_modifier": 15.0}
         ]
-        weight = 0.5
+        weight = 0.6
+        category = f"Produits > {product['type']}"
     
-    # Déterminer la catégorie PrestaShop
-    category_mapping = {
-        "vetement": "Vêtements > Polos",
-        "chaussures": "Chaussures > Sneakers", 
-        "electronique": "High-tech > Électronique",
-        "cosmetique": "Beauté > Cosmétiques",
-        "alimentaire": "Alimentation > Produits Bio",
-    }
+    # SEO PROFESSIONNEL
+    brand_name = product["brand"]
+    product_name = product["name"]
+    product_type = product["type"]
+    price = product["price"]
     
-    category = category_mapping.get(product["type"].lower(), f"Produits > {product['type']}")
+    # Titre SEO optimisé (max 60 caractères)
+    seo_title = f"{brand_name} {product_name.split()[0]} - {product_type}"
+    if len(seo_title) > 60:
+        seo_title = f"{brand_name} {product_type} {product['sku'][:8]}"
+    
+    # Description SEO optimisée (max 160 caractères)
+    seo_description = f"Achetez {product_name} de {brand_name} au prix de {price}€. {product['description'][:80]}. Livraison gratuite dès 50€."
+    if len(seo_description) > 160:
+        seo_description = f"{brand_name} {product_name[:30]} - {price}€. Livraison gratuite. Retour 30j."
+    
+    # Mots-clés SEO
+    keywords = [
+        brand_name.lower(),
+        product_type.lower(),
+        product['sku'].lower(),
+        "pas cher",
+        "livraison gratuite",
+        "authentique",
+        "officiel"
+    ]
+    
+    if "lacoste" in brand_name.lower():
+        keywords.extend(["crocodile", "polo lacoste", "sneakers lacoste", "tennis"])
+    elif "nike" in brand_name.lower():
+        keywords.extend(["swoosh", "air max", "running", "sport"])
+    
+    meta_keywords = ", ".join(keywords[:10])  # Max 10 mots-clés
+    
+    # URL SEO friendly
+    url_slug = f"{brand_name.lower()}-{product_name.lower().replace(' ', '-')}-{product['sku'].lower()}"
+    url_slug = re.sub(r'[^a-z0-9-]', '', url_slug)[:50]  # Nettoyer et limiter
+    
+    # Génération du contenu enrichi
+    rich_description = f"""
+<h2>Description détaillée</h2>
+<p>{product['description']}</p>
+
+<h3>Caractéristiques techniques</h3>
+<ul>
+""" + "\n".join([f"<li><strong>{k}:</strong> {v}</li>" for k, v in characteristics.items()]) + f"""
+</ul>
+
+<h3>Pourquoi choisir {brand_name} ?</h3>
+<p>La marque {brand_name} est reconnue mondialement pour la qualité de ses produits. 
+Ce {product_type.lower()} allie style, confort et durabilité pour vous accompagner au quotidien.</p>
+
+<h3>Guide des tailles et conseils</h3>
+<p>Consultez notre guide des tailles pour choisir la taille parfaite. 
+En cas de doute, notre service client est à votre disposition.</p>
+
+<h3>Livraison et retours</h3>
+<ul>
+<li>Livraison gratuite dès 50€ d'achat</li>
+<li>Retour gratuit sous 30 jours</li>
+<li>Expédition sous 24h (jours ouvrés)</li>
+</ul>
+"""
     
     return {
         "id": str(uuid.uuid4()),
         "product_id": product["id"],
         "ean": product["ean"],
         "sku": product["sku"],
+        
+        # Informations produit
         "title": f"Fiche PrestaShop - {product['name']}",
+        "name": product["name"],
         "description": product["description"],
+        "rich_description": rich_description,
         "brand": product["brand"],
         "type": product["type"],
         "price": product["price"],
+        "original_price": product_info.get("original_price", product["price"]),
+        
+        # Caractéristiques et variations
         "characteristics": characteristics,
         "variations": variations,
         "weight": weight,
         "category": category,
-        "seo_title": f"{product['brand']} {product['name']} - {product['type']}",
-        "seo_description": f"Achetez {product['name']} de {product['brand']} au meilleur prix. {product['description'][:100]}",
-        "meta_keywords": f"{product['brand']}, {product['name']}, {product['type']}, {product['sku']}",
-        "visibility": "both",
+        
+        # SEO COMPLET
+        "seo_title": seo_title,
+        "seo_description": seo_description,
+        "meta_keywords": meta_keywords,
+        "url_slug": url_slug,
+        "canonical_url": f"https://monsite.com/produit/{url_slug}",
+        
+        # Métadonnées techniques PrestaShop
+        "visibility": "both",  # both, catalog, search, none
         "available_for_order": True,
         "show_price": True,
         "online_only": False,
+        "condition": "new",
+        "tax_rate": 20.0,
+        "minimal_quantity": 1,
+        "low_stock_threshold": 5,
+        "show_condition": False,
+        
+        # Images et médias
+        "main_image": f"https://via.placeholder.com/800x600/FFFFFF/000000?text={brand_name}+{product_type}",
+        "gallery_images": [
+            f"https://via.placeholder.com/800x600/F0F0F0/000000?text=Image+1",
+            f"https://via.placeholder.com/800x600/E0E0E0/000000?text=Image+2", 
+            f"https://via.placeholder.com/800x600/D0D0D0/000000?text=Image+3"
+        ],
+        
+        # Données structurées JSON-LD
+        "structured_data": {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": product["name"],
+            "description": product["description"],
+            "brand": {"@type": "Brand", "name": product["brand"]},
+            "sku": product["sku"],
+            "gtin13": product["ean"],
+            "offers": {
+                "@type": "Offer",
+                "price": str(product["price"]),
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "seller": {"@type": "Organization", "name": "Mon E-commerce"}
+            }
+        },
+        
         "created_at": datetime.now().isoformat()
     }
 
