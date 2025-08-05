@@ -20,8 +20,15 @@ import re
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
+# MongoDB connection with OpenSSL 3.0 compatibility
 mongo_url = os.environ['MONGO_URL']
+# Add SSL configuration for OpenSSL 3.0 compatibility
+if 'mongodb+srv://' in mongo_url:
+    # For MongoDB Atlas connections, add specific SSL parameters
+    if 'tlsAllowInvalidCertificates=true' not in mongo_url:
+        separator = '&' if '?' in mongo_url else '?'
+        mongo_url += f"{separator}tlsAllowInvalidCertificates=true&ssl_cert_reqs=0"
+
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
