@@ -922,50 +922,127 @@ def serve_frontend():
                     document.getElementById('skuCode').value = '';
                     
                     resultsDiv.innerHTML = `
-                        <div class="space-y-4">
-                            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
-                                <h3 class="font-semibold text-green-800 mb-3">✅ Produit trouvé</h3>
-                                <div class="grid md:grid-cols-2 gap-4">
-                                    <div>
-                                        <p><strong>Nom:</strong> ${data.product.name}</p>
-                                        <p><strong>Marque:</strong> ${data.product.brand}</p>
-                                        <p><strong>Type:</strong> ${data.product.type}</p>
-                                        <p><strong>Prix:</strong> ${data.product.price}€</p>
+                        <div class="space-y-6">
+                            <div class="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg border-l-4 border-green-500 shadow-md">
+                                <h3 class="font-bold text-green-800 mb-4 text-lg">✅ Produit identifié avec succès !</h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">Nom:</span>
+                                            <span class="text-gray-900 font-semibold">${data.product.name}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">Marque:</span>
+                                            <span class="text-blue-600 font-bold">${data.product.brand}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">Type:</span>
+                                            <span class="text-gray-800">${data.product.type}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">Prix:</span>
+                                            <span class="text-red-600 font-bold text-lg">${data.product.price}€</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p><strong>EAN:</strong> ${data.product.ean}</p>
-                                        <p><strong>SKU:</strong> ${data.product.sku}</p>
-                                        <p><strong>Recherché par:</strong> ${data.product.search_type}</p>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">EAN:</span>
+                                            <span class="text-gray-600 font-mono text-sm">${data.product.ean}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">SKU:</span>
+                                            <span class="text-gray-600 font-mono text-sm">${data.product.sku}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">Recherche:</span>
+                                            <span class="text-purple-600 font-medium">${data.product.search_type}</span>
+                                        </div>
+                                        ${data.product.confidence ? `
+                                        <div class="flex items-center">
+                                            <span class="font-medium text-gray-700 w-20">Confiance:</span>
+                                            <div class="flex items-center">
+                                                <div class="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                                                    <div class="bg-green-500 h-2 rounded-full" style="width: ${data.product.confidence}%"></div>
+                                                </div>
+                                                <span class="text-green-600 font-bold">${Math.round(data.product.confidence)}%</span>
+                                            </div>
+                                        </div>
+                                        ` : ''}
                                     </div>
                                 </div>
-                                <p class="mt-2 text-sm text-gray-700"><strong>Description:</strong> ${data.product.description}</p>
+                                <div class="mt-4 p-3 bg-white rounded border-l-2 border-blue-300">
+                                    <p class="text-sm text-gray-700"><strong>Description:</strong> ${data.product.description}</p>
+                                </div>
                             </div>
+                            
                             ${data.sheet ? `
-                            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                                <h3 class="font-semibold text-blue-800 mb-3">📄 Fiche PrestaShop générée</h3>
-                                <div class="space-y-2">
-                                    <p><strong>Titre:</strong> ${data.sheet.title}</p>
-                                    <p><strong>Catégorie:</strong> ${data.sheet.category}</p>
-                                    <p><strong>Poids:</strong> ${data.sheet.weight}kg</p>
-                                    <div class="mt-3">
-                                        <p class="font-medium text-blue-700">Caractéristiques:</p>
-                                        <div class="bg-white p-2 rounded text-sm">
-                                            ${Object.entries(data.sheet.characteristics).map(([key, value]) => 
-                                                `<span class="inline-block bg-gray-100 px-2 py-1 rounded mr-1 mb-1">${key}: ${value}</span>`
+                            <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg border-l-4 border-blue-500 shadow-md">
+                                <h3 class="font-bold text-blue-800 mb-4 text-lg">📄 Fiche PrestaShop générée</h3>
+                                <div class="space-y-4">
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div>
+                                            <p><strong>Titre SEO:</strong> <span class="text-blue-600">${data.sheet.seo_title || 'Non défini'}</span></p>
+                                            <p><strong>Catégorie:</strong> ${data.sheet.category}</p>
+                                            <p><strong>Poids:</strong> ${data.sheet.weight}kg</p>
+                                        </div>
+                                        <div>
+                                            <p><strong>Visibilité:</strong> ${data.sheet.visibility}</p>
+                                            <p><strong>Stock:</strong> Disponible</p>
+                                            <p><strong>État:</strong> Neuf</p>
+                                        </div>
+                                    </div>
+                                    
+                                    ${data.sheet.seo_description ? `
+                                    <div class="bg-white p-3 rounded border">
+                                        <p class="text-sm"><strong>Description SEO:</strong></p>
+                                        <p class="text-gray-700 italic">"${data.sheet.seo_description}"</p>
+                                    </div>
+                                    ` : ''}
+                                    
+                                    <div class="bg-white p-4 rounded border">
+                                        <p class="font-medium text-gray-700 mb-2">🔧 Caractéristiques techniques:</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                            ${Object.entries(data.sheet.characteristics || {}).map(([key, value]) => 
+                                                `<div class="flex justify-between py-1 border-b border-gray-100">
+                                                    <span class="text-sm font-medium text-gray-600">${key}:</span>
+                                                    <span class="text-sm text-gray-800">${value}</span>
+                                                </div>`
                                             ).join('')}
                                         </div>
                                     </div>
-                                    <div class="mt-3">
-                                        <p class="font-medium text-blue-700">Variations disponibles:</p>
-                                        <div class="bg-white p-2 rounded text-sm">
-                                            ${data.sheet.variations.map(v => 
-                                                `<span class="inline-block bg-green-100 px-2 py-1 rounded mr-1 mb-1">${v.taille}${v.couleur ? ' - ' + v.couleur : ''} (Stock: ${v.stock})</span>`
-                                            ).join('')}
+                                    
+                                    <div class="bg-white p-4 rounded border">
+                                        <p class="font-medium text-gray-700 mb-3">📦 Variations disponibles:</p>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                            ${(data.sheet.variations || []).slice(0, 8).map(v => {
+                                                const label = v.taille || v.pointure || v.option || 'Standard';
+                                                const color = v.couleur ? ` - ${v.couleur}` : '';
+                                                const stock = v.stock || 0;
+                                                const stockColor = stock > 15 ? 'text-green-600' : stock > 5 ? 'text-orange-500' : 'text-red-500';
+                                                return `<div class="bg-gray-50 p-2 rounded text-center border">
+                                                    <div class="font-medium text-sm">${label}${color}</div>
+                                                    <div class="${stockColor} text-xs">Stock: ${stock}</div>
+                                                </div>`;
+                                            }).join('')}
                                         </div>
+                                        ${(data.sheet.variations || []).length > 8 ? 
+                                            `<p class="text-xs text-gray-500 mt-2">+ ${(data.sheet.variations || []).length - 8} autres variations...</p>` 
+                                            : ''}
                                     </div>
+
+                                    ${data.sheet.meta_keywords ? `
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <p class="text-xs text-gray-600"><strong>Mots-clés SEO:</strong> ${data.sheet.meta_keywords}</p>
+                                    </div>
+                                    ` : ''}
                                 </div>
                             </div>
                             ` : ''}
+                            
+                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                                <h4 class="font-medium text-yellow-800 mb-2">💡 Prêt pour PrestaShop !</h4>
+                                <p class="text-sm text-yellow-700">Cette fiche contient toutes les données nécessaires pour créer un produit complet dans PrestaShop : SEO, variations, caractéristiques, etc.</p>
+                            </div>
                         </div>
                     `;
                 }
