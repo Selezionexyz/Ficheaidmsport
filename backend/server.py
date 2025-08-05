@@ -425,22 +425,47 @@ def serve_frontend():
                     
                     resultsDiv.innerHTML = `
                         <div class="space-y-4">
-                            <div class="bg-green-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-green-800">✅ Produit trouvé</h3>
-                                <p><strong>Nom:</strong> ${data.product.name}</p>
-                                <p><strong>EAN:</strong> ${data.product.ean}</p>
-                                <p><strong>SKU:</strong> ${data.product.sku}</p>
-                                <p><strong>Marque:</strong> ${data.product.brand}</p>
-                                <p><strong>Prix:</strong> ${data.product.price}€</p>
-                                <p><strong>Recherché par:</strong> ${data.product.search_type}</p>
+                            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                <h3 class="font-semibold text-green-800 mb-3">✅ Produit trouvé</h3>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p><strong>Nom:</strong> ${data.product.name}</p>
+                                        <p><strong>Marque:</strong> ${data.product.brand}</p>
+                                        <p><strong>Type:</strong> ${data.product.type}</p>
+                                        <p><strong>Prix:</strong> ${data.product.price}€</p>
+                                    </div>
+                                    <div>
+                                        <p><strong>EAN:</strong> ${data.product.ean}</p>
+                                        <p><strong>SKU:</strong> ${data.product.sku}</p>
+                                        <p><strong>Recherché par:</strong> ${data.product.search_type}</p>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-700"><strong>Description:</strong> ${data.product.description}</p>
                             </div>
                             ${data.sheet ? `
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="font-semibold text-blue-800">📄 Fiche générée</h3>
-                                <p><strong>Titre:</strong> ${data.sheet.title}</p>
-                                <p><strong>Description:</strong> ${data.sheet.description}</p>
-                                <p><strong>SKU:</strong> ${data.sheet.sku}</p>
-                                <p><strong>Prix:</strong> ${data.sheet.price}€</p>
+                            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                                <h3 class="font-semibold text-blue-800 mb-3">📄 Fiche PrestaShop générée</h3>
+                                <div class="space-y-2">
+                                    <p><strong>Titre:</strong> ${data.sheet.title}</p>
+                                    <p><strong>Catégorie:</strong> ${data.sheet.category}</p>
+                                    <p><strong>Poids:</strong> ${data.sheet.weight}kg</p>
+                                    <div class="mt-3">
+                                        <p class="font-medium text-blue-700">Caractéristiques:</p>
+                                        <div class="bg-white p-2 rounded text-sm">
+                                            ${Object.entries(data.sheet.characteristics).map(([key, value]) => 
+                                                `<span class="inline-block bg-gray-100 px-2 py-1 rounded mr-1 mb-1">${key}: ${value}</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <p class="font-medium text-blue-700">Variations disponibles:</p>
+                                        <div class="bg-white p-2 rounded text-sm">
+                                            ${data.sheet.variations.map(v => 
+                                                `<span class="inline-block bg-green-100 px-2 py-1 rounded mr-1 mb-1">${v.taille}${v.couleur ? ' - ' + v.couleur : ''} (Stock: ${v.stock})</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             ` : ''}
                         </div>
