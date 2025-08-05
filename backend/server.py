@@ -114,7 +114,14 @@ def search_product(request: SearchRequest):
                 product_type = "Produit"
         else:
             # Recherche par SKU
-            if "lacoste" in search_term.lower() or "polo" in search_term.lower():
+            if search_term == "49SMA0006-02H":
+                # Sneakers Lacoste spécifique
+                product_name = "Sneakers Lacoste Graduate"
+                brand = "Lacoste"
+                price = 120.00
+                description = "Sneakers Lacoste Graduate en cuir avec logo crocodile"
+                product_type = "Chaussures"
+            elif "lacoste" in search_term.lower() or "polo" in search_term.lower():
                 product_name = f"Polo Lacoste {search_term}"
                 brand = "Lacoste"
                 price = 95.00
