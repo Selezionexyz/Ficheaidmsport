@@ -161,17 +161,33 @@ def serve_frontend():
 
         <!-- Formulaire -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4">🔍 Recherche par Code EAN</h2>
+            <h2 class="text-xl font-semibold mb-4">🔍 Recherche de Produit</h2>
             
             <div class="space-y-4">
-                <div>
-                    <input
-                        type="text"
-                        id="eanCode"
-                        placeholder="Entrez le code EAN du produit (13 chiffres)..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        maxlength="13"
-                    />
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Code EAN (13 chiffres)</label>
+                        <input
+                            type="text"
+                            id="eanCode"
+                            placeholder="3614270357637..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            maxlength="13"
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">SKU / Référence</label>
+                        <input
+                            type="text"
+                            id="skuCode"
+                            placeholder="POLO-LACOSTE-001..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        />
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <p class="text-sm text-blue-700">💡 <strong>Astuce:</strong> Remplissez soit le code EAN, soit le SKU - pas les deux en même temps</p>
                 </div>
                 
                 <div class="flex items-center">
@@ -189,11 +205,22 @@ def serve_frontend():
             </div>
 
             <div class="mt-6">
-                <p class="text-sm text-gray-600 mb-2">💡 Exemples de codes EAN :</p>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="setEAN('3614270357637')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm">3614270357637</button>
-                    <button onclick="setEAN('4064037884942')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm">4064037884942</button>
-                    <button onclick="setEAN('1234567890123')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm">1234567890123</button>
+                <p class="text-sm text-gray-600 mb-2">💡 Exemples :</p>
+                <div class="space-y-2">
+                    <div>
+                        <span class="text-xs text-gray-500">EAN:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setEAN('3614270357637')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm">3614270357637</button>
+                            <button onclick="setEAN('4064037884942')" class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm">4064037884942</button>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500">SKU:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setSKU('POLO-LACOSTE-001')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm">POLO-LACOSTE-001</button>
+                            <button onclick="setSKU('NIKE-AIR-MAX-90')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm">NIKE-AIR-MAX-90</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
