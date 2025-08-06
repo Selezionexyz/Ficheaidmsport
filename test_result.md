@@ -170,7 +170,7 @@
     implemented: true
     working: false
     file: "backend/server.py"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -180,6 +180,9 @@
         - working: false
           agent: "testing"
           comment: "CRITICAL: Backend API is not responding correctly. POST requests to /api/generate/product return 'Method Not Allowed' error. Backend server may not be running or endpoints are not properly configured."
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL INFRASTRUCTURE ISSUE: Backend server is completely unresponsive. All API endpoints fail with connection errors. Tested /api/health, /api/search, /api/export - none are accessible. This is a server deployment/infrastructure issue, not a code problem. The FastAPI code is correct but the service is not running properly."
 
 ## metadata:
   created_by: "main_agent"
