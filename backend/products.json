@@ -20,5 +20,107 @@
     "price": 89.99,
     "created_at": "2025-08-05T21:09:28.329558",
     "status": "found"
+  },
+  {
+    "product": {
+      "id": "db727f50-3bde-424f-afbd-f7c8f28bf7aa",
+      "ean": "EAN71FC6E2481",
+      "sku": "48SMA0097-21G",
+      "name": "Lacoste L001 Set Leather Sneakers",
+      "brand": "Lacoste",
+      "type": "Sneakers",
+      "price": 90.99,
+      "original_price": 130.0,
+      "description": "Sneakers Lacoste L001 Set en cuir premium, inspiration tennis années 80 avec logo crocodile brodé",
+      "image": "https://images.lacoste.com/dw/image/v2/BCWW_PRD/on/demandware.static/-/Sites-lacoste-master-catalog/default/dw7c8b5c8d/images/48SMA0097_21G_24.jpg",
+      "category": "Chaussures > Sneakers > Lacoste",
+      "material": "100% Cuir grainé",
+      "search_type": "SKU",
+      "search_term": "48SMA0097-21G",
+      "created_at": "2025-08-06T08:10:41.100291"
+    },
+    "sheet": {
+      "id": "1f2e51d0-9145-421c-b59a-8d3ac4830ff8",
+      "product_id": "db727f50-3bde-424f-afbd-f7c8f28bf7aa",
+      "category": "Chaussures > Sneakers > Lacoste",
+      "weight": 0.8,
+      "variations": [
+        {
+          "size": "39",
+          "color": "Blanc/Vert",
+          "stock": 15,
+          "ean": "EAN71FC6E2400"
+        },
+        {
+          "size": "40",
+          "color": "Blanc/Vert",
+          "stock": 15,
+          "ean": "EAN71FC6E2401"
+        },
+        {
+          "size": "41",
+          "color": "Blanc/Vert",
+          "stock": 20,
+          "ean": "EAN71FC6E2402"
+        },
+        {
+          "size": "42",
+          "color": "Blanc/Vert",
+          "stock": 20,
+          "ean": "EAN71FC6E2403"
+        },
+        {
+          "size": "43",
+          "color": "Blanc/Vert",
+          "stock": 15,
+          "ean": "EAN71FC6E2404"
+        },
+        {
+          "size": "39",
+          "color": "Noir/Blanc",
+          "stock": 15,
+          "ean": "EAN71FC6E2405"
+        },
+        {
+          "size": "40",
+          "color": "Noir/Blanc",
+          "stock": 15,
+          "ean": "EAN71FC6E2406"
+        },
+        {
+          "size": "41",
+          "color": "Noir/Blanc",
+          "stock": 20,
+          "ean": "EAN71FC6E2407"
+        },
+        {
+          "size": "42",
+          "color": "Noir/Blanc",
+          "stock": 20,
+          "ean": "EAN71FC6E2408"
+        },
+        {
+          "size": "43",
+          "color": "Noir/Blanc",
+          "stock": 15,
+          "ean": "EAN71FC6E2409"
+        }
+      ],
+      "characteristics": {
+        "Matière": "Cuir premium et textile",
+        "Doublure": "Textile respirant",
+        "Semelle": "Caoutchouc antidérapant",
+        "Logo": "Crocodile Lacoste brodé",
+        "Style": "Sneakers lifestyle",
+        "Entretien": "Nettoyage cuir doux"
+      },
+      "seo_title": "Lacoste Lacoste - Sneakers",
+      "seo_description": "Achetez Lacoste L001 Set Leather Sneakers Lacoste à 90.99€. Sneakers Lacoste L001 Set en cuir premium, inspiration tennis années 80 avec log. Livraison gratuite",
+      "url_slug": "lacoste-lacoste-48sma0097-21g",
+      "visibility": "both",
+      "available_for_order": true,
+      "condition": "new",
+      "created_at": "2025-08-06T08:10:41.100358"
+    }
   }
 ]
