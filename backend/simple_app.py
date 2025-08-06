@@ -162,24 +162,19 @@ def fallback_unknown_product(ean_sku):
             "source": "fallback"
         }
 
-# Base de données des produits RÉELS
-PRODUCTS = {
-    "48SMA0097-21G": {
-        "name": "Lacoste L001 Set Leather Sneakers",
-        "brand": "Lacoste",
-        "price": 90.99,
-        "original_price": 130.00,
-        "description": "Sneakers Lacoste L001 Set en cuir premium, inspiration tennis années 80",
-        "image": "https://images.lacoste.com/dw/image/v2/BCWW_PRD/on/demandware.static/-/Sites-lacoste-master-catalog/default/dw7c8b5c8d/images/48SMA0097_21G_24.jpg"
-    },
-    "3608077027028": {
-        "name": "Polo Lacoste Classic Fit Piqué",
-        "brand": "Lacoste", 
-        "price": 95.00,
-        "description": "Polo Lacoste en coton piqué avec crocodile brodé",
-        "image": "https://images.lacoste.com/dw/image/v2/BCWW_PRD/on/demandware.static/-/Sites-lacoste-master-catalog/default/dw987654/images/PH4012_166_24.jpg"
-    }
-}
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, Response
+from pydantic import BaseModel
+from typing import Optional
+import json
+import uuid
+import re
+from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
+import asyncio
+
+app = FastAPI()
 
 class SearchRequest(BaseModel):
     ean: Optional[str] = None
