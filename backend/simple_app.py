@@ -392,23 +392,21 @@ def main():
     """
 
 @app.post("/api/search")
-def search_product(request: SearchRequest):
+async def search_product(request: SearchRequest):
     search_term = request.ean or request.sku
     search_type = "EAN" if request.ean else "SKU"
     
     if not search_term:
         raise HTTPException(status_code=400, detail="EAN ou SKU requis")
     
-    # Trouver le produit
-    product_info = PRODUCTS.get(search_term, {
-        "name": f"Produit {search_term[:8]}",
-        "brand": "Marque Inconnue",
-        "price": 49.99,
-        "description": f"Produit identifié par {search_type}",
-        "image": "https://via.placeholder.com/300x300/e0e0e0/666?text=Produit"
-    })
+    print(f"🔍 VRAIE RECHERCHE: {search_type} = {search_term}")
     
-    # Créer le produit
+    # VRAIE RECHERCHE WEB
+    product_info = await real_product_search(search_term)
+    
+    print(f"✅ Trouvé: {product_info['name']} - {product_info['brand']} - Confiance: {product_info['confidence']}%")
+    
+    # Créer le produit avec les vraies infos
     product = {
         "id": str(uuid.uuid4()),
         "ean": request.ean or f"EAN{uuid.uuid4().hex[:10].upper()}",
@@ -416,44 +414,122 @@ def search_product(request: SearchRequest):
         "name": product_info["name"],
         "brand": product_info["brand"],
         "price": product_info["price"],
-        "original_price": product_info.get("original_price"),
         "description": product_info["description"],
-        "image": product_info["image"]
+        "confidence": product_info["confidence"],
+        "source": product_info["source"],
+        "image": f"https://via.placeholder.com/300x300/f0f0f0/666?text={product_info['brand']}+{product_info['type']}"
     }
     
-    # Créer la fiche PrestaShop
-    sheet = {
-        "seo_title": f"{product['brand']} {product['name']}",
-        "seo_description": f"Achetez {product['name']} {product['brand']} à {product['price']}€. Livraison gratuite.",
-        "url_slug": f"{product['brand'].lower()}-{product['name'][:20].lower()}".replace(" ", "-"),
-        "category": "Chaussures > Sneakers" if "sneakers" in product['name'].lower() else "Vêtements > Polos",
-        "weight": 0.8 if "sneakers" in product['name'].lower() else 0.3,
-        "characteristics": {
-            "Marque": product['brand'],
-            "Matière": "Cuir premium" if "lacoste" in product['brand'].lower() else "Standard",
-            "Couleur": "Multicolore",
-            "Entretien": "Selon notice"
-        },
-        "variations": [
-            {"size": "39", "color": "Blanc", "stock": 15},
-            {"size": "40", "color": "Blanc", "stock": 20},
-            {"size": "41", "color": "Blanc", "stock": 25},
-            {"size": "42", "color": "Blanc", "stock": 30},
-            {"size": "43", "color": "Blanc", "stock": 20},
-            {"size": "44", "color": "Blanc", "stock": 15}
-        ] if "sneakers" in product['name'].lower() else [
-            {"size": "S", "color": "Blanc", "stock": 10},
-            {"size": "M", "color": "Blanc", "stock": 15},
-            {"size": "L", "color": "Blanc", "stock": 20},
-            {"size": "XL", "color": "Blanc", "stock": 15}
-        ]
-    }
+    # Générer la fiche SEO complète
+    sheet = generate_real_seo_sheet(product, product_info)
     
     return {
         "success": True,
-        "message": f"{product['brand']} {product['name']} trouvé et fiche générée !",
+        "message": f"✅ {product['brand']} {product['name']} trouvé ! (Confiance: {product['confidence']}%)",
         "product": product,
         "sheet": sheet
+    }
+
+def generate_real_seo_sheet(product, product_info):
+    """Générer une vraie fiche SEO optimisée"""
+    brand = product['brand']
+    name = product['name']
+    price = product['price']
+    
+    # SEO Title optimisé (max 60 chars)
+    seo_title = f"{brand} {name[:30]} - Prix {price}€"
+    if len(seo_title) > 60:
+        seo_title = f"{brand} {name[:20]} - {price}€"
+    
+    # Meta Description optimisée (max 160 chars)  
+    seo_description = f"Achetez {name} {brand} au meilleur prix {price}€. Livraison gratuite dès 50€. Retour 30 jours. Authentique garanti."
+    if len(seo_description) > 160:
+        seo_description = f"{brand} {name[:40]} - {price}€. Livraison gratuite. Retour 30j. Authentique."
+    
+    # URL SEO friendly
+    url_slug = f"{brand.lower()}-{name[:25].lower()}".replace(" ", "-").replace("'", "")
+    url_slug = re.sub(r'[^a-z0-9-]', '', url_slug)
+    
+    # Variations selon le produit
+    if "sneakers" in product_info["type"].lower() or "chaussures" in product_info["type"].lower():
+        variations = [
+            {"size": "39", "color": "Blanc", "stock": 12, "ean": f"{product['ean'][:-2]}39"},
+            {"size": "40", "color": "Blanc", "stock": 18, "ean": f"{product['ean'][:-2]}40"},
+            {"size": "41", "color": "Blanc", "stock": 25, "ean": f"{product['ean'][:-2]}41"},
+            {"size": "42", "color": "Blanc", "stock": 30, "ean": f"{product['ean'][:-2]}42"},
+            {"size": "43", "color": "Blanc", "stock": 22, "ean": f"{product['ean'][:-2]}43"},
+            {"size": "44", "color": "Blanc", "stock": 15, "ean": f"{product['ean'][:-2]}44"},
+            {"size": "45", "color": "Blanc", "stock": 8, "ean": f"{product['ean'][:-2]}45"}
+        ]
+        weight = 0.8
+        category = f"Chaussures > {product_info['type']} > {brand}"
+        characteristics = {
+            "Matière": "Cuir et textile premium",
+            "Semelle": "Caoutchouc antidérapant", 
+            "Fermeture": "Lacets",
+            "Logo": f"{brand} authentique",
+            "Confort": "Semelle rembourrée",
+            "Style": product_info["type"]
+        }
+    elif "polo" in product_info["type"].lower():
+        variations = [
+            {"size": "S", "color": "Blanc", "stock": 15, "chest": "88-96cm"},
+            {"size": "M", "color": "Blanc", "stock": 25, "chest": "96-104cm"},
+            {"size": "L", "color": "Blanc", "stock": 30, "chest": "104-112cm"},
+            {"size": "XL", "color": "Blanc", "stock": 20, "chest": "112-120cm"},
+            {"size": "S", "color": "Marine", "stock": 12, "chest": "88-96cm"},
+            {"size": "M", "color": "Marine", "stock": 20, "chest": "96-104cm"},
+            {"size": "L", "color": "Marine", "stock": 25, "chest": "104-112cm"},
+            {"size": "XL", "color": "Marine", "stock": 18, "chest": "112-120cm"}
+        ]
+        weight = 0.25
+        category = f"Vêtements > Polos > {brand}"
+        characteristics = {
+            "Matière": "100% Coton piqué",
+            "Coupe": "Classic Fit",
+            "Col": "Polo avec boutons",
+            "Logo": f"{brand} brodé",
+            "Manches": "Courtes",
+            "Entretien": "Lavage 30°C"
+        }
+    else:
+        variations = [
+            {"option": "Standard", "stock": 20, "ean": product['ean']},
+            {"option": "Premium", "stock": 15, "ean": f"{product['ean'][:-1]}9"}
+        ]
+        weight = 0.5
+        category = f"Produits > {product_info['type']}"
+        characteristics = {
+            "Marque": brand,
+            "Type": product_info["type"],
+            "Qualité": "Premium",
+            "Garantie": "2 ans"
+        }
+    
+    return {
+        "seo_title": seo_title,
+        "seo_description": seo_description,
+        "url_slug": url_slug,
+        "category": category,
+        "weight": weight,
+        "characteristics": characteristics,
+        "variations": variations,
+        "keywords": f"{brand}, {product_info['type']}, {name[:20]}, pas cher, authentique, livraison gratuite",
+        "h1_title": f"{brand} {name}",
+        "meta_robots": "index, follow",
+        "canonical_url": f"https://monsite.com/produit/{url_slug}",
+        "structured_data": {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": name,
+            "brand": {"@type": "Brand", "name": brand},
+            "offers": {
+                "@type": "Offer",
+                "price": str(price),
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock"
+            }
+        }
     }
 
 @app.get("/api/export/{product_id}")
