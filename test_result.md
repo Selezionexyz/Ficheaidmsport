@@ -202,3 +202,5 @@
       message: "Starting comprehensive testing of Générateur de Fiches Produits application. Will test EAN search, tab navigation, automatic generation toggle, and example buttons as requested by user."
     - agent: "testing"
       message: "TESTING COMPLETED: Frontend UI components work perfectly (tabs, buttons, toggles) but CRITICAL backend API failure. EAN search returns 'Method Not Allowed' error. Backend server needs investigation - may not be running or endpoints misconfigured."
+    - agent: "testing"
+      message: "CRITICAL BACKEND ISSUE IDENTIFIED: Backend server is not responding to any requests. All API endpoints (/api/health, /api/search, /api/export) are completely inaccessible. This is a server infrastructure issue, not a code issue. The FastAPI application code is correct but the service is not running or not accessible through the configured URL."
