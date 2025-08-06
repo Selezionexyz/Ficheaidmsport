@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏷️ Test Direct</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">🏷️ Test Direct - Générateur de Fiches</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <input type="text" id="ean" placeholder="EAN (13 chiffres)" class="px-3 py-2 border rounded">
+                <input type="text" id="sku" placeholder="SKU" class="px-3 py-2 border rounded">
+            </div>
+            
+            <button onclick="testSearch()" class="w-full bg-blue-600 text-white px-4 py-2 rounded mb-4">
+                🚀 Tester la Recherche
+            </button>
+            
+            <div class="space-x-2">
+                <button onclick="fillSKU('48SMA0097-21G')" class="px-3 py-1 bg-green-100 text-green-700 rounded">
+                    48SMA0097-21G (Lacoste)
+                </button>
+                <button onclick="fillEAN('3608077027028')" class="px-3 py-1 bg-blue-100 text-blue-700 rounded">
+                    3608077027028 (Polo)
+                </button>
+            </div>
+        </div>
+        
+        <div id="status" class="mb-4"></div>
+        <div id="results" class="bg-white rounded-lg shadow p-6"></div>
+    </div>
+
+    <script>
+        function fillSKU(sku) {
+            document.getElementById('sku').value = sku;
+            document.getElementById('ean').value = '';
+            updateStatus('✅ SKU rempli: ' + sku);
+        }
+        
+        function fillEAN(ean) {
+            document.getElementById('ean').value = ean;
+            document.getElementById('sku').value = '';
+            updateStatus('✅ EAN rempli: ' + ean);
+        }
+        
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = 
+                '<div class="bg-blue-100 text-blue-800 p-3 rounded">' + message + '</div>';
+        }
+        
+        async function testSearch() {
+            const ean = document.getElementById('ean').value.trim();
+            const sku = document.getElementById('sku').value.trim();
+            const results = document.getElementById('results');
+            
+            if (!ean && !sku) {
+                updateStatus('❌ Veuillez saisir un EAN ou un SKU');
+                return;
+            }
+            
+            updateStatus('🔄 Recherche en cours...');
+            results.innerHTML = '<div class="text-center py-8">🔍 Recherche...</div>';
+            
+            try {
+                console.log('Envoi requête:', {ean: ean || null, sku: sku || null});
+                
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ean: ean || null,
+                        sku: sku || null
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok && data.success) {
+                    updateStatus('✅ Succès: ' + data.message);
+                    showProduct(data.product, data.sheet);
+                } else {
+                    updateStatus('❌ Erreur: ' + (data.detail || data.message));
+                    results.innerHTML = '<div class="text-red-600">Erreur: ' + (data.detail || 'Recherche échouée') + '</div>';
+                }
+                
+            } catch (error) {
+                console.error('Erreur fetch:', error);
+                updateStatus('❌ Erreur de connexion: ' + error.message);
+                results.innerHTML = '<div class="text-red-600">Erreur de connexion</div>';
+            }
+        }
+        
+        function showProduct(product, sheet) {
+            const results = document.getElementById('results');
+            
+            results.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Produit -->
+                    <div class="border-l-4 border-green-400 bg-green-50 p-4">
+                        <h2 class="text-lg font-bold text-green-800 mb-3">✅ Produit trouvé</h2>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <img src="${product.image}" alt="${product.name}" 
+                                     class="w-full h-48 object-cover rounded mb-2"
+                                     onerror="this.src='https://via.placeholder.com/400x300/e0e0e0/666?text=Image+Produit'">
+                            </div>
+                            <div class="space-y-2">
+                                <h3 class="text-xl font-bold">${product.name}</h3>
+                                <p class="text-blue-600 font-semibold">${product.brand}</p>
+                                <p class="text-2xl font-bold text-red-600">${product.price}€</p>
+                                <p class="text-gray-600 text-sm">${product.description}</p>
+                                <div class="text-xs text-gray-500">
+                                    <div>EAN: ${product.ean}</div>
+                                    <div>SKU: ${product.sku}</div>
+                                    <div>Type: ${product.type}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fiche PrestaShop -->
+                    <div class="border-l-4 border-blue-400 bg-blue-50 p-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <h2 class="text-lg font-bold text-blue-800">📄 Fiche PrestaShop</h2>
+                            <button onclick="downloadCSV('${product.id}')" 
+                                    class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                📥 Export CSV
+                            </button>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3 rounded">
+                                <h4 class="font-semibold mb-2">🎯 SEO</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><strong>Titre:</strong> ${sheet.seo_title}</div>
+                                    <div><strong>Description:</strong> ${sheet.seo_description}</div>
+                                    <div><strong>URL:</strong> ${sheet.url_slug}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white p-3 rounded">
+                                <h4 class="font-semibold mb-2">📦 Détails</h4>
+                                <div class="text-sm space-y-1">
+                                    <div><strong>Catégorie:</strong> ${sheet.category}</div>
+                                    <div><strong>Poids:</strong> ${sheet.weight}kg</div>
+                                    <div><strong>Variations:</strong> ${sheet.variations.length}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 bg-white p-3 rounded">
+                            <h4 class="font-semibold mb-2">🔧 Caractéristiques</h4>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                ${Object.entries(sheet.characteristics).map(([key, value]) => 
+                                    `<div><strong>${key}:</strong> ${value}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 bg-white p-3 rounded">
+                            <h4 class="font-semibold mb-2">📦 Variations (${sheet.variations.length})</h4>
+                            <div class="grid grid-cols-4 gap-2">
+                                ${sheet.variations.slice(0, 8).map(variation => 
+                                    `<div class="bg-gray-50 p-2 rounded text-center text-xs">
+                                        <div class="font-medium">${variation.size || variation.option}</div>
+                                        ${variation.color ? `<div class="text-gray-600">${variation.color}</div>` : ''}
+                                        <div class="text-green-600">Stock: ${variation.stock}</div>
+                                    </div>`
+                                ).join('')}
+                            </div>
+                            ${sheet.variations.length > 8 ? `<div class="text-xs text-gray-500 mt-2">+${sheet.variations.length - 8} autres variations...</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function downloadCSV(productId) {
+            try {
+                updateStatus('📥 Génération du CSV...');
+                const response = await fetch('/api/export/' + productId);
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'product_' + productId + '.csv';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    updateStatus('✅ CSV téléchargé !');
+                } else {
+                    updateStatus('❌ Erreur export CSV');
+                }
+            } catch (error) {
+                updateStatus('❌ Erreur export: ' + error.message);
+            }
+        }
+        
+        // Test au chargement
+        window.addEventListener('load', function() {
+            updateStatus('✅ Page chargée - Prêt pour les tests');
+        });
+    </script>
+</body>
+</html>
