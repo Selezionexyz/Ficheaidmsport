@@ -326,5 +326,208 @@
       "condition": "new",
       "created_at": "2025-08-06T08:13:26.584707"
     }
+  },
+  {
+    "product": {
+      "id": "e7211087-232b-4b39-9b2e-105eafec52f6",
+      "ean": "EANB1D08FE187",
+      "sku": "48SMA0097-21G",
+      "name": "Lacoste L001 Set Leather Sneakers",
+      "brand": "Lacoste",
+      "type": "Sneakers",
+      "price": 90.99,
+      "original_price": 130.0,
+      "description": "Sneakers Lacoste L001 Set en cuir premium, inspiration tennis années 80 avec logo crocodile brodé",
+      "image": "https://images.lacoste.com/dw/image/v2/BCWW_PRD/on/demandware.static/-/Sites-lacoste-master-catalog/default/dw7c8b5c8d/images/48SMA0097_21G_24.jpg",
+      "category": "Chaussures > Sneakers > Lacoste",
+      "material": "100% Cuir grainé",
+      "search_type": "SKU",
+      "search_term": "48SMA0097-21G",
+      "created_at": "2025-08-06T08:15:05.319125"
+    },
+    "sheet": {
+      "id": "5cfcd572-4397-49ee-b909-5497dd607ed8",
+      "product_id": "e7211087-232b-4b39-9b2e-105eafec52f6",
+      "category": "Chaussures > Sneakers > Lacoste",
+      "weight": 0.8,
+      "variations": [
+        {
+          "size": "39",
+          "color": "Blanc/Vert",
+          "stock": 15,
+          "ean": "EANB1D08FE100"
+        },
+        {
+          "size": "40",
+          "color": "Blanc/Vert",
+          "stock": 15,
+          "ean": "EANB1D08FE101"
+        },
+        {
+          "size": "41",
+          "color": "Blanc/Vert",
+          "stock": 20,
+          "ean": "EANB1D08FE102"
+        },
+        {
+          "size": "42",
+          "color": "Blanc/Vert",
+          "stock": 20,
+          "ean": "EANB1D08FE103"
+        },
+        {
+          "size": "43",
+          "color": "Blanc/Vert",
+          "stock": 15,
+          "ean": "EANB1D08FE104"
+        },
+        {
+          "size": "39",
+          "color": "Noir/Blanc",
+          "stock": 15,
+          "ean": "EANB1D08FE105"
+        },
+        {
+          "size": "40",
+          "color": "Noir/Blanc",
+          "stock": 15,
+          "ean": "EANB1D08FE106"
+        },
+        {
+          "size": "41",
+          "color": "Noir/Blanc",
+          "stock": 20,
+          "ean": "EANB1D08FE107"
+        },
+        {
+          "size": "42",
+          "color": "Noir/Blanc",
+          "stock": 20,
+          "ean": "EANB1D08FE108"
+        },
+        {
+          "size": "43",
+          "color": "Noir/Blanc",
+          "stock": 15,
+          "ean": "EANB1D08FE109"
+        }
+      ],
+      "characteristics": {
+        "Matière": "Cuir premium et textile",
+        "Doublure": "Textile respirant",
+        "Semelle": "Caoutchouc antidérapant",
+        "Logo": "Crocodile Lacoste brodé",
+        "Style": "Sneakers lifestyle",
+        "Entretien": "Nettoyage cuir doux"
+      },
+      "seo_title": "Lacoste Lacoste - Sneakers",
+      "seo_description": "Achetez Lacoste L001 Set Leather Sneakers Lacoste à 90.99€. Sneakers Lacoste L001 Set en cuir premium, inspiration tennis années 80 avec log. Livraison gratuite",
+      "url_slug": "lacoste-lacoste-48sma0097-21g",
+      "visibility": "both",
+      "available_for_order": true,
+      "condition": "new",
+      "created_at": "2025-08-06T08:15:05.319172"
+    }
+  },
+  {
+    "product": {
+      "id": "7b9e466f-a97c-45a3-b777-cbe272a99cdb",
+      "ean": "3608077027028",
+      "sku": "SKU36080770",
+      "name": "Polo Lacoste Classic Fit Piqué",
+      "brand": "Lacoste",
+      "type": "Polo",
+      "price": 95.0,
+      "original_price": null,
+      "description": "Polo Lacoste classic fit en coton piqué avec crocodile brodé, coupe droite",
+      "image": "https://images.lacoste.com/dw/image/v2/BCWW_PRD/on/demandware.static/-/Sites-lacoste-master-catalog/default/dw987654/images/PH4012_166_24.jpg",
+      "category": "Vêtements > Polos > Lacoste",
+      "material": "100% Coton piqué",
+      "search_type": "EAN",
+      "search_term": "3608077027028",
+      "created_at": "2025-08-06T08:15:05.337941"
+    },
+    "sheet": {
+      "id": "021583a6-e577-465c-9341-1f2a910bc07d",
+      "product_id": "7b9e466f-a97c-45a3-b777-cbe272a99cdb",
+      "category": "Vêtements > Polos > Lacoste",
+      "weight": 0.3,
+      "variations": [
+        {
+          "size": "S",
+          "color": "Blanc",
+          "stock": 15,
+          "ean": "3608077027000"
+        },
+        {
+          "size": "M",
+          "color": "Blanc",
+          "stock": 20,
+          "ean": "3608077027001"
+        },
+        {
+          "size": "L",
+          "color": "Blanc",
+          "stock": 20,
+          "ean": "3608077027002"
+        },
+        {
+          "size": "XL",
+          "color": "Blanc",
+          "stock": 15,
+          "ean": "3608077027003"
+        },
+        {
+          "size": "XXL",
+          "color": "Blanc",
+          "stock": 15,
+          "ean": "3608077027004"
+        },
+        {
+          "size": "S",
+          "color": "Marine",
+          "stock": 15,
+          "ean": "3608077027005"
+        },
+        {
+          "size": "M",
+          "color": "Marine",
+          "stock": 20,
+          "ean": "3608077027006"
+        },
+        {
+          "size": "L",
+          "color": "Marine",
+          "stock": 20,
+          "ean": "3608077027007"
+        },
+        {
+          "size": "XL",
+          "color": "Marine",
+          "stock": 15,
+          "ean": "3608077027008"
+        },
+        {
+          "size": "XXL",
+          "color": "Marine",
+          "stock": 15,
+          "ean": "3608077027009"
+        }
+      ],
+      "characteristics": {
+        "Matière": "100% Coton piqué",
+        "Coupe": "Classic Fit",
+        "Col": "Polo 2 boutons",
+        "Logo": "Crocodile brodé",
+        "Entretien": "Lavage 30°C"
+      },
+      "seo_title": "Lacoste Polo - Polo",
+      "seo_description": "Achetez Polo Lacoste Classic Fit Piqué Lacoste à 95.0€. Polo Lacoste classic fit en coton piqué avec crocodile brodé, coupe droite. Livraison gratuite.",
+      "url_slug": "lacoste-polo-sku36080770",
+      "visibility": "both",
+      "available_for_order": true,
+      "condition": "new",
+      "created_at": "2025-08-06T08:15:05.337987"
+    }
   }
 ]
