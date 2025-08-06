@@ -511,7 +511,14 @@ def get_products():
     """Retourne la liste des produits trouvés"""
     try:
         products = load_products()
-        product_list = [item["product"] for item in products]
+        product_list = []
+        for item in products:
+            if isinstance(item, dict) and "product" in item:
+                # Format nouveau avec product/sheet
+                product_list.append(item["product"])
+            elif isinstance(item, dict) and "id" in item:
+                # Format ancien - produit direct
+                product_list.append(item)
         return {"success": True, "products": product_list}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -523,14 +530,16 @@ def get_sheets():
         products = load_products()
         sheets = []
         for item in products:
-            sheet = item["sheet"].copy()
-            product = item["product"]
-            sheet.update({
-                "title": f"{product['brand']} {product['name']}",
-                "ean": product["ean"],
-                "description": product["description"]
-            })
-            sheets.append(sheet)
+            if isinstance(item, dict) and "product" in item and "sheet" in item:
+                # Format nouveau avec product/sheet
+                sheet = item["sheet"].copy()
+                product = item["product"]
+                sheet.update({
+                    "title": f"{product['brand']} {product['name']}",
+                    "ean": product["ean"],
+                    "description": product["description"]
+                })
+                sheets.append(sheet)
         return {"success": True, "sheets": sheets}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
