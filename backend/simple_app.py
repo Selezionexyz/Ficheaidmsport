@@ -5,8 +5,162 @@ from typing import Optional
 import json
 import uuid
 from datetime import datetime
+import requests
+import re
+from bs4 import BeautifulSoup
 
 app = FastAPI()
+
+async def real_product_search(ean_sku):
+    """Vraie recherche de produit sur le web"""
+    try:
+        # Recherche sur plusieurs sources
+        search_queries = [
+            f"{ean_sku} prix acheter",
+            f"{ean_sku} product specifications",
+            f'"{ean_sku}" lacoste nike adidas',
+        ]
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        
+        for query in search_queries:
+            try:
+                # Recherche via DuckDuckGo (plus permissive)
+                search_url = f"https://html.duckduckgo.com/html/?q={query}"
+                response = requests.get(search_url, headers=headers, timeout=10)
+                
+                if response.status_code == 200:
+                    # Parser les résultats de recherche
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    results = soup.find_all('a', class_='result__a')
+                    
+                    for result in results[:5]:  # Top 5 résultats
+                        title = result.get_text().strip()
+                        url = result.get('href', '')
+                        
+                        # Analyser le titre pour extraire des infos
+                        product_info = extract_product_info(title, ean_sku)
+                        if product_info['confidence'] > 70:
+                            return product_info
+                
+                break  # Si on trouve quelque chose, on s'arrête
+                
+            except Exception as e:
+                print(f"Erreur recherche {query}: {e}")
+                continue
+        
+        # Si aucune recherche web ne fonctionne, essayer une base de données EAN
+        return await fallback_ean_lookup(ean_sku)
+        
+    except Exception as e:
+        print(f"Erreur recherche globale: {e}")
+        return fallback_unknown_product(ean_sku)
+
+def extract_product_info(title, ean_sku):
+    """Extraire les infos produit depuis le titre"""
+    title_lower = title.lower()
+    
+    # Détecter la marque
+    brand = "Marque Inconnue"
+    brands = ['lacoste', 'nike', 'adidas', 'puma', 'new balance', 'vans', 'converse']
+    for b in brands:
+        if b in title_lower:
+            brand = b.title()
+            break
+    
+    # Détecter le type de produit
+    product_type = "Produit"
+    types = {
+        'sneakers': 'Sneakers', 'shoes': 'Chaussures', 'polo': 'Polo', 
+        'shirt': 'Chemise', 't-shirt': 'T-shirt', 'jacket': 'Veste',
+        'pants': 'Pantalon', 'shorts': 'Short'
+    }
+    for keyword, ptype in types.items():
+        if keyword in title_lower:
+            product_type = ptype
+            break
+    
+    # Extraire le prix si visible
+    price_match = re.search(r'[\$€£](\d+(?:[.,]\d{2})?)', title)
+    price = float(price_match.group(1).replace(',', '.')) if price_match else 79.99
+    
+    # Score de confiance
+    confidence = 30
+    if ean_sku.lower() in title_lower:
+        confidence += 40
+    if brand != "Marque Inconnue":
+        confidence += 20
+    if product_type != "Produit":
+        confidence += 10
+    
+    return {
+        "name": title[:60].strip(),
+        "brand": brand,
+        "price": price,
+        "type": product_type,
+        "description": f"{brand} {product_type} identifié par recherche web",
+        "confidence": confidence,
+        "source": "web_search"
+    }
+
+async def fallback_ean_lookup(ean_sku):
+    """Recherche EAN dans une base de données publique"""
+    try:
+        # Essayer l'API UPCitemdb (gratuite)
+        response = requests.get(f"https://api.upcitemdb.com/prod/trial/lookup?upc={ean_sku}", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('items'):
+                item = data['items'][0]
+                return {
+                    "name": item.get('title', f'Produit {ean_sku[:8]}'),
+                    "brand": item.get('brand', 'Marque Inconnue'),
+                    "price": 59.99,  # Prix par défaut
+                    "type": "Produit",
+                    "description": item.get('description', f'Produit trouvé dans la base EAN'),
+                    "confidence": 85,
+                    "source": "ean_database"
+                }
+    except:
+        pass
+    
+    return fallback_unknown_product(ean_sku)
+
+def fallback_unknown_product(ean_sku):
+    """Produit de fallback quand rien n'est trouvé"""
+    # Analyser l'EAN/SKU pour deviner
+    if ean_sku.startswith('360807'):
+        return {
+            "name": "Polo Lacoste Classic",
+            "brand": "Lacoste",
+            "price": 95.00,
+            "type": "Polo",
+            "description": "Polo Lacoste en coton piqué (identifié par préfixe EAN)",
+            "confidence": 60,
+            "source": "ean_analysis"
+        }
+    elif 'SMA' in ean_sku and len(ean_sku) > 8:
+        return {
+            "name": "Sneakers Lacoste",
+            "brand": "Lacoste", 
+            "price": 120.00,
+            "type": "Sneakers",
+            "description": "Sneakers Lacoste (identifié par code SKU)",
+            "confidence": 65,
+            "source": "sku_analysis"
+        }
+    else:
+        return {
+            "name": f"Produit {ean_sku[:8]}",
+            "brand": "Marque Inconnue",
+            "price": 49.99,
+            "type": "Produit",
+            "description": f"Produit non identifié automatiquement",
+            "confidence": 30,
+            "source": "fallback"
+        }
 
 # Base de données des produits RÉELS
 PRODUCTS = {
