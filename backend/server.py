@@ -445,10 +445,32 @@ def export_prestashop_csv(product_id: str):
     products = load_products()
     product_data = None
     
+    # Chercher le produit dans les deux formats
     for item in products:
-        if item["product"]["id"] == product_id:
-            product_data = item
-            break
+        if isinstance(item, dict):
+            if "product" in item and item["product"]["id"] == product_id:
+                # Format nouveau avec product/sheet
+                product_data = item
+                break
+            elif "id" in item and item["id"] == product_id:
+                # Format ancien - créer une fiche temporaire
+                product = item
+                sheet = {
+                    "id": str(uuid.uuid4()),
+                    "product_id": product["id"],
+                    "category": "Produits > Divers",
+                    "weight": 0.5,
+                    "variations": [{"option": "Standard", "stock": 25, "ean": product.get("ean", "")}],
+                    "characteristics": {"Matière": "Standard", "Qualité": "Norme européenne"},
+                    "seo_title": f"{product.get('brand', 'Produit')} {product.get('name', '')}"[:60],
+                    "seo_description": f"Achetez {product.get('name', '')} à {product.get('price', 0)}€",
+                    "url_slug": f"produit-{product['id'][:8]}",
+                    "visibility": "both",
+                    "available_for_order": True,
+                    "condition": "new"
+                }
+                product_data = {"product": product, "sheet": sheet}
+                break
     
     if not product_data:
         raise HTTPException(status_code=404, detail="Produit non trouvé")
@@ -463,14 +485,14 @@ def export_prestashop_csv(product_id: str):
     main_row = {
         "ID": product["id"],
         "Actif": "1",
-        "Nom": product["name"],
+        "Nom": product.get("name", "Produit"),
         "Catégories": sheet["category"],
-        "Prix HT": str(product["price"]),
-        "Prix TTC": str(round(product["price"] * 1.2, 2)),
-        "Référence": product["sku"],
-        "EAN-13": product["ean"],
-        "Description courte": product["description"][:300],
-        "Description": f"<h2>{product['name']}</h2><p>{product['description']}</p>",
+        "Prix HT": str(product.get("price", 0)),
+        "Prix TTC": str(round(float(product.get("price", 0)) * 1.2, 2)),
+        "Référence": product.get("sku", product.get("id")[:8]),
+        "EAN-13": product.get("ean", ""),
+        "Description courte": product.get("description", "")[:300],
+        "Description": f"<h2>{product.get('name', 'Produit')}</h2><p>{product.get('description', '')}</p>",
         "Balise titre": sheet["seo_title"],
         "Méta-description": sheet["seo_description"],
         "URL simplifiée": sheet["url_slug"],
@@ -478,7 +500,7 @@ def export_prestashop_csv(product_id: str):
         "Poids": str(sheet["weight"]),
         "Quantité": "100",
         "Visibilité": "both",
-        "Marque": product["brand"]
+        "Marque": product.get("brand", "")
     }
     
     # Ajouter les caractéristiques
@@ -503,7 +525,7 @@ def export_prestashop_csv(product_id: str):
     return JSONResponse(
         content=csv_content,
         media_type="text/csv",
-        headers={"Content-Disposition": f"attachment; filename=prestashop_{product['sku']}.csv"}
+        headers={"Content-Disposition": f"attachment; filename=prestashop_{product.get('sku', product['id'][:8])}.csv"}
     )
 
 @app.get("/api/products")
