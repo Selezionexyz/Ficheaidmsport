@@ -506,6 +506,35 @@ def export_prestashop_csv(product_id: str):
         headers={"Content-Disposition": f"attachment; filename=prestashop_{product['sku']}.csv"}
     )
 
+@app.get("/api/products")
+def get_products():
+    """Retourne la liste des produits trouvés"""
+    try:
+        products = load_products()
+        product_list = [item["product"] for item in products]
+        return {"success": True, "products": product_list}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/sheets")
+def get_sheets():
+    """Retourne la liste des fiches créées"""
+    try:
+        products = load_products()
+        sheets = []
+        for item in products:
+            sheet = item["sheet"].copy()
+            product = item["product"]
+            sheet.update({
+                "title": f"{product['brand']} {product['name']}",
+                "ean": product["ean"],
+                "description": product["description"]
+            })
+            sheets.append(sheet)
+        return {"success": True, "sheets": sheets}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/health")
 def health_check():
     return {"status": "OK", "products_count": len(load_products())}
