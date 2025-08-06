@@ -86,164 +86,86 @@ def get_app():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏷️ Générateur de Fiches Produits DM'Sports</title>
+    <title>🏷️ Générateur de Fiches Produits</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .product-card { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .loading { animation: pulse 1.5s infinite; }
-    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50">
     <div class="container mx-auto px-4 py-6 max-w-6xl">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg shadow-lg p-6 mb-8">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <span class="text-3xl mr-4">🏷️</span>
-                    <div>
-                        <h1 class="text-2xl font-bold">Générateur de Fiches Produits</h1>
-                        <p class="text-blue-100">IA + EAN/SKU → PrestaShop Ready</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-medium">v2.0</span>
-                    <p class="text-blue-100 text-sm mt-1">Style DM'Sports</p>
-                </div>
-            </div>
+        <div class="bg-blue-600 text-white rounded-lg p-6 mb-6">
+            <h1 class="text-2xl font-bold">🏷️ Générateur de Fiches Produits</h1>
+            <p class="text-blue-100">EAN/SKU → PrestaShop Ready</p>
         </div>
 
-        <!-- Search Form -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">🔍 Recherche de Produit</h2>
+        <!-- Form -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">🔍 Recherche</h2>
             
             <div class="grid md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Code EAN (13 chiffres)</label>
-                    <input type="text" id="eanInput" placeholder="3608077027028" 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           maxlength="13">
+                    <label class="block text-sm font-medium mb-2">EAN (13 chiffres)</label>
+                    <input type="text" id="ean" placeholder="3608077027028" 
+                           class="w-full px-3 py-2 border rounded-lg" maxlength="13">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">SKU / Référence</label>
-                    <input type="text" id="skuInput" placeholder="48SMA0097-21G" 
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    <label class="block text-sm font-medium mb-2">SKU</label>
+                    <input type="text" id="sku" placeholder="48SMA0097-21G" 
+                           class="w-full px-3 py-2 border rounded-lg">
                 </div>
             </div>
 
-            <button onclick="searchProduct()" id="searchBtn" 
-                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all">
-                🚀 Rechercher & Créer la Fiche
+            <button onclick="search()" id="btn" 
+                    class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                🚀 Rechercher
             </button>
 
             <!-- Examples -->
-            <div class="mt-6">
-                <p class="text-sm text-gray-600 mb-3">💡 Exemples de test :</p>
-                <div class="space-y-2">
-                    <div>
-                        <span class="text-xs text-gray-500 font-medium">EAN:</span>
-                        <div class="flex flex-wrap gap-2 mt-1">
-                            <button onclick="setEAN('3608077027028')" class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-sm">3608077027028</button>
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text-xs text-gray-500 font-medium">SKU:</span>
-                        <div class="flex flex-wrap gap-2 mt-1">
-                            <button onclick="setSKU('48SMA0097-21G')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm font-bold">48SMA0097-21G ⭐</button>
-                            <button onclick="setSKU('49SMA0006-02H')" class="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 text-sm">49SMA0006-02H</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="mt-4">
+                <p class="text-sm text-gray-600 mb-2">Exemples :</p>
+                <button onclick="setVal('sku','48SMA0097-21G')" class="px-2 py-1 bg-green-100 text-green-700 rounded mr-2">48SMA0097-21G</button>
+                <button onclick="setVal('ean','3608077027028')" class="px-2 py-1 bg-blue-100 text-blue-700 rounded">3608077027028</button>
             </div>
         </div>
 
         <!-- Messages -->
-        <div id="messageArea"></div>
+        <div id="message"></div>
 
         <!-- Results -->
-        <div id="resultsArea"></div>
-
-        <!-- Comment ça marche -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-800">🚀 Comment ça marche ?</h2>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="text-center">
-                    <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span class="text-xl">1</span>
-                    </div>
-                    <h3 class="font-semibold mb-2">🏷️ Code produit</h3>
-                    <p class="text-sm text-gray-600">EAN ou SKU du produit</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span class="text-xl">2</span>
-                    </div>
-                    <h3 class="font-semibold mb-2">🔍 Recherche IA</h3>
-                    <p class="text-sm text-gray-600">Identification automatique</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span class="text-xl">3</span>
-                    </div>
-                    <h3 class="font-semibold mb-2">📄 Fiche SEO</h3>
-                    <p class="text-sm text-gray-600">Contenu optimisé</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span class="text-xl">4</span>
-                    </div>
-                    <h3 class="font-semibold mb-2">📦 Export</h3>
-                    <p class="text-sm text-gray-600">PrestaShop CSV</p>
-                </div>
-            </div>
-        </div>
+        <div id="results"></div>
     </div>
 
     <script>
-        function setEAN(ean) {
-            document.getElementById('eanInput').value = ean;
-            document.getElementById('skuInput').value = '';
+        function setVal(type, value) {
+            if (type === 'sku') {
+                document.getElementById('sku').value = value;
+                document.getElementById('ean').value = '';
+            } else {
+                document.getElementById('ean').value = value;
+                document.getElementById('sku').value = '';
+            }
         }
 
-        function setSKU(sku) {
-            document.getElementById('skuInput').value = sku;
-            document.getElementById('eanInput').value = '';
+        function showMsg(text, type) {
+            const msg = document.getElementById('message');
+            const color = type === 'success' ? 'green' : 'red';
+            msg.innerHTML = `<div class="bg-${color}-100 text-${color}-800 p-3 rounded mb-4">${text}</div>`;
+            setTimeout(() => msg.innerHTML = '', 5000);
         }
 
-        function showMessage(text, type = 'success') {
-            const messageArea = document.getElementById('messageArea');
-            const alertClass = type === 'success' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-red-100 text-red-800 border-red-200';
-            messageArea.innerHTML = `
-                <div class="${alertClass} border px-4 py-3 rounded-lg mb-4">
-                    ${type === 'success' ? '✅' : '❌'} ${text}
-                </div>
-            `;
-            setTimeout(() => messageArea.innerHTML = '', 5000);
-        }
-
-        async function searchProduct() {
-            const eanInput = document.getElementById('eanInput');
-            const skuInput = document.getElementById('skuInput');
-            const searchBtn = document.getElementById('searchBtn');
-            const resultsArea = document.getElementById('resultsArea');
-
-            const ean = eanInput.value.trim();
-            const sku = skuInput.value.trim();
+        async function search() {
+            const ean = document.getElementById('ean').value.trim();
+            const sku = document.getElementById('sku').value.trim();
+            const btn = document.getElementById('btn');
+            const results = document.getElementById('results');
 
             if (!ean && !sku) {
-                showMessage('Veuillez saisir un EAN ou un SKU', 'error');
+                showMsg('❌ Saisissez un EAN ou un SKU', 'error');
                 return;
             }
 
-            if (ean && sku) {
-                showMessage('Saisissez soit un EAN, soit un SKU - pas les deux', 'error');
-                return;
-            }
-
-            // Loading state
-            searchBtn.innerHTML = '🔄 Recherche en cours...';
-            searchBtn.disabled = true;
-            resultsArea.innerHTML = '<div class="text-center py-8 loading"><div class="text-4xl mb-2">🔍</div><p>Recherche du produit...</p></div>';
+            btn.innerHTML = '🔄 Recherche...';
+            btn.disabled = true;
+            results.innerHTML = '<div class="text-center py-8">🔍 Recherche en cours...</div>';
 
             try {
                 const response = await fetch('/api/search', {
@@ -255,145 +177,98 @@ def get_app():
                 const data = await response.json();
                 
                 if (response.ok) {
-                    showMessage(data.message, 'success');
-                    displayResults(data);
-                    eanInput.value = '';
-                    skuInput.value = '';
+                    showMsg(`✅ ${data.message}`, 'success');
+                    showResults(data);
+                    document.getElementById('ean').value = '';
+                    document.getElementById('sku').value = '';
                 } else {
-                    showMessage(data.detail || 'Erreur lors de la recherche', 'error');
-                    resultsArea.innerHTML = '';
+                    showMsg(`❌ ${data.detail}`, 'error');
+                    results.innerHTML = '';
                 }
             } catch (error) {
-                showMessage('Erreur de connexion: ' + error.message, 'error');
-                resultsArea.innerHTML = '';
+                showMsg('❌ Erreur: ' + error.message, 'error');
+                results.innerHTML = '';
             }
 
-            searchBtn.innerHTML = '🚀 Rechercher & Créer la Fiche';
-            searchBtn.disabled = false;
+            btn.innerHTML = '🚀 Rechercher';
+            btn.disabled = false;
         }
 
-        function displayResults(data) {
-            const resultsArea = document.getElementById('resultsArea');
-            const product = data.product;
-            const sheet = data.sheet;
+        function showResults(data) {
+            const results = document.getElementById('results');
+            const p = data.product;
+            const s = data.sheet;
 
-            resultsArea.innerHTML = `
+            results.innerHTML = `
                 <div class="space-y-6">
-                    <!-- Product Card -->
-                    <div class="product-card bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-lg shadow-lg p-6">
-                        <h3 class="text-xl font-bold text-green-800 mb-4">✅ Produit identifié</h3>
-                        <div class="grid md:grid-cols-3 gap-6">
-                            <!-- Product Image -->
-                            <div class="md:col-span-1">
-                                <div class="bg-white rounded-lg p-4 shadow-sm">
-                                    <img src="${product.image || 'https://via.placeholder.com/300x300/f0f0f0/666666?text=Image+Produit'}" 
-                                         alt="${product.name}" class="w-full h-48 object-cover rounded-md mb-3">
-                                    <p class="text-xs text-gray-500 text-center">${product.brand} - ${product.type}</p>
-                                </div>
+                    <!-- Produit -->
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-green-800 mb-4">✅ Produit identifié</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover rounded mb-3">
                             </div>
-                            
-                            <!-- Product Info -->
-                            <div class="md:col-span-2 space-y-3">
-                                <div>
-                                    <h4 class="text-lg font-bold text-gray-800">${product.name}</h4>
-                                    <p class="text-blue-600 font-semibold">${product.brand}</p>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <span class="text-sm text-gray-600">Prix:</span>
-                                        <p class="text-2xl font-bold text-red-600">${product.price}€</p>
-                                        ${product.original_price ? `<p class="text-sm text-gray-500 line-through">${product.original_price}€</p>` : ''}
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Type:</span>
-                                        <p class="font-medium">${product.type}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <span class="text-sm text-gray-600">EAN:</span>
-                                        <p class="font-mono text-sm">${product.ean}</p>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">SKU:</span>
-                                        <p class="font-mono text-sm">${product.sku}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-white p-3 rounded border">
-                                    <span class="text-sm text-gray-600">Description:</span>
-                                    <p class="text-gray-700 text-sm mt-1">${product.description}</p>
+                            <div class="space-y-2">
+                                <h4 class="font-bold text-xl">${p.name}</h4>
+                                <p class="text-blue-600 font-semibold">${p.brand}</p>
+                                <p class="text-2xl font-bold text-red-600">${p.price}€</p>
+                                <p class="text-gray-600">${p.description}</p>
+                                <div class="text-sm text-gray-500">
+                                    <p>EAN: ${p.ean}</p>
+                                    <p>SKU: ${p.sku}</p>
+                                    <p>Type: ${p.type}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- PrestaShop Sheet -->
-                    <div class="product-card bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg shadow-lg p-6">
+                    <!-- Fiche -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-blue-800">📄 Fiche PrestaShop</h3>
-                            <button onclick="exportCSV('${product.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <h3 class="text-lg font-bold text-blue-800">📄 Fiche PrestaShop</h3>
+                            <button onclick="exportCSV('${p.id}')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                                 📥 Export CSV
                             </button>
                         </div>
-
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <!-- SEO Info -->
-                            <div class="space-y-4">
-                                <div class="bg-white p-4 rounded-lg shadow-sm">
-                                    <h4 class="font-semibold text-gray-800 mb-3">🎯 SEO</h4>
-                                    <div class="space-y-2">
-                                        <div>
-                                            <span class="text-xs text-gray-500">Titre SEO:</span>
-                                            <p class="text-sm font-medium">${sheet.seo_title}</p>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs text-gray-500">Description SEO:</span>
-                                            <p class="text-xs text-gray-700">${sheet.seo_description}</p>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs text-gray-500">URL:</span>
-                                            <p class="text-xs text-blue-600">${sheet.url_slug}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="bg-white p-4 rounded-lg shadow-sm">
-                                    <h4 class="font-semibold text-gray-800 mb-3">🏷️ Catégorie</h4>
-                                    <p class="text-sm">${sheet.category}</p>
-                                    <p class="text-xs text-gray-500 mt-1">Poids: ${sheet.weight}kg</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold mb-2">🎯 SEO</h4>
+                                <div class="bg-white p-3 rounded text-sm">
+                                    <p><strong>Titre:</strong> ${s.seo_title}</p>
+                                    <p><strong>Description:</strong> ${s.seo_description}</p>
+                                    <p><strong>URL:</strong> ${s.url_slug}</p>
                                 </div>
                             </div>
-
-                            <!-- Variations -->
-                            <div class="space-y-4">
-                                <div class="bg-white p-4 rounded-lg shadow-sm">
-                                    <h4 class="font-semibold text-gray-800 mb-3">📦 Variations</h4>
-                                    <div class="grid grid-cols-3 gap-2">
-                                        ${sheet.variations.slice(0, 6).map(v => `
-                                            <div class="bg-gray-50 p-2 rounded text-center text-xs">
-                                                <div class="font-medium">${v.size || v.option}</div>
-                                                ${v.color ? `<div class="text-gray-600">${v.color}</div>` : ''}
-                                                <div class="text-green-600">Stock: ${v.stock}</div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                    ${sheet.variations.length > 6 ? `<p class="text-xs text-gray-500 mt-2 text-center">+${sheet.variations.length - 6} autres...</p>` : ''}
+                            <div>
+                                <h4 class="font-semibold mb-2">📦 Détails</h4>
+                                <div class="bg-white p-3 rounded text-sm">
+                                    <p><strong>Catégorie:</strong> ${s.category}</p>
+                                    <p><strong>Poids:</strong> ${s.weight}kg</p>
+                                    <p><strong>Variations:</strong> ${s.variations.length}</p>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="bg-white p-4 rounded-lg shadow-sm">
-                                    <h4 class="font-semibold text-gray-800 mb-3">🔧 Caractéristiques</h4>
-                                    <div class="space-y-1">
-                                        ${Object.entries(sheet.characteristics).slice(0, 4).map(([key, value]) => `
-                                            <div class="flex justify-between text-xs">
-                                                <span class="text-gray-600">${key}:</span>
-                                                <span class="text-gray-800">${value}</span>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
+                        <div class="mt-4">
+                            <h4 class="font-semibold mb-2">🔧 Caractéristiques</h4>
+                            <div class="bg-white p-3 rounded grid grid-cols-2 gap-2 text-sm">
+                                ${Object.entries(s.characteristics).map(([k,v]) => 
+                                    `<div><strong>${k}:</strong> ${v}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h4 class="font-semibold mb-2">📦 Variations</h4>
+                            <div class="bg-white p-3 rounded grid grid-cols-4 gap-2 text-xs">
+                                ${s.variations.slice(0,8).map(v => 
+                                    `<div class="bg-gray-50 p-2 rounded text-center">
+                                        <div class="font-medium">${v.size || v.option}</div>
+                                        ${v.color ? `<div>${v.color}</div>` : ''}
+                                        <div class="text-green-600">Stock: ${v.stock}</div>
+                                    </div>`
+                                ).join('')}
                             </div>
                         </div>
                     </div>
@@ -405,23 +280,21 @@ def get_app():
             try {
                 const response = await fetch(`/api/export/${productId}`);
                 const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
+                const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.style.display = 'none';
                 a.href = url;
                 a.download = `product_${productId}.csv`;
-                document.body.appendChild(a);
                 a.click();
-                window.URL.revokeObjectURL(url);
-                showMessage('Export CSV téléchargé !', 'success');
+                URL.revokeObjectURL(url);
+                showMsg('✅ Export téléchargé !', 'success');
             } catch (error) {
-                showMessage('Erreur lors de l\'export', 'error');
+                showMsg('❌ Erreur export', 'error');
             }
         }
 
-        // Enter key support
-        document.getElementById('eanInput').addEventListener('keypress', e => e.key === 'Enter' && searchProduct());
-        document.getElementById('skuInput').addEventListener('keypress', e => e.key === 'Enter' && searchProduct());
+        // Enter key
+        document.getElementById('ean').addEventListener('keypress', e => e.key === 'Enter' && search());
+        document.getElementById('sku').addEventListener('keypress', e => e.key === 'Enter' && search());
     </script>
 </body>
 </html>
