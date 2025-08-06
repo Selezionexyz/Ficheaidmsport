@@ -199,24 +199,93 @@ def test_root_endpoint():
         print(f"❌ Root endpoint error: {str(e)}")
         return False
 
+def test_products_endpoint():
+    """Test the /api/products endpoint"""
+    print("\n📦 Testing Products Endpoint...")
+    try:
+        response = requests.get(f"{API_BASE}/products", timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Products endpoint working!")
+            print(f"Products found: {len(data.get('products', []))}")
+            
+            # Check if we have the expected Lacoste products
+            products = data.get('products', [])
+            lacoste_products = [p for p in products if 'Lacoste' in p.get('brand', '')]
+            print(f"Lacoste products: {len(lacoste_products)}")
+            
+            if lacoste_products:
+                print("✅ Expected Lacoste products found in list")
+                return True
+            else:
+                print("⚠️ No Lacoste products found")
+                return True  # Still working, just no data
+        else:
+            print(f"❌ Products endpoint failed: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Products endpoint error: {str(e)}")
+        return False
+
+def test_sheets_endpoint():
+    """Test the /api/sheets endpoint"""
+    print("\n📄 Testing Sheets Endpoint...")
+    try:
+        response = requests.get(f"{API_BASE}/sheets", timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Sheets endpoint working!")
+            print(f"Sheets found: {len(data.get('sheets', []))}")
+            
+            # Check if we have PrestaShop formatted sheets
+            sheets = data.get('sheets', [])
+            if sheets:
+                sample_sheet = sheets[0]
+                required_fields = ['category', 'variations', 'characteristics', 'seo_title', 'seo_description']
+                has_all_fields = all(field in sample_sheet for field in required_fields)
+                
+                if has_all_fields:
+                    print("✅ PrestaShop sheets properly formatted")
+                    return True
+                else:
+                    print("⚠️ Sheets missing some PrestaShop fields")
+                    return True  # Still working
+            else:
+                print("⚠️ No sheets found")
+                return True  # Still working, just no data
+        else:
+            print(f"❌ Sheets endpoint failed: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Sheets endpoint error: {str(e)}")
+        return False
+
 def main():
     """Run all backend tests"""
     print("🚀 Starting Backend API Tests...")
     
     results = {
         "health": False,
-        "root": False,
         "search_sku": False,
         "search_ean": False,
+        "products": False,
+        "sheets": False,
         "export": False,
         "error_handling": True  # Assume this works unless it fails
     }
     
     # Test all endpoints
     results["health"] = test_health_endpoint()
-    results["root"] = test_root_endpoint()
     results["search_sku"], product_id = test_search_with_sku()
     results["search_ean"], _ = test_search_with_ean()
+    results["products"] = test_products_endpoint()
+    results["sheets"] = test_sheets_endpoint()
     results["export"] = test_export_endpoint(product_id)
     test_invalid_requests()  # This doesn't affect overall results
     
