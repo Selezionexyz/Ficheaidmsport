@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Test complet de l'application Générateur de Fiches Produits qui fonctionne maintenant après réparation des problèmes MongoDB"
+## user_problem_statement: "L'interface web ne fonctionne pas - les boutons ne répondent pas et les résultats ne s'affichent jamais. L'utilisateur a payé 60 crédits et attend un outil qui fonctionne. Tests requis: API backend avec curl, endpoint /api/search, SKU 48SMA0097-21G, endpoint /api/export."
 
 ## frontend:
   - task: "EAN Search Functionality"
