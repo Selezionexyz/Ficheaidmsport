@@ -1241,5 +1241,54 @@
       "condition": "new",
       "created_at": "2025-08-06T09:14:57.709351"
     }
+  },
+  {
+    "product": {
+      "id": "e5709aa0-2a6e-476c-a2a1-30dbb5c625b6",
+      "ean": "3614270357637",
+      "sku": "SKU36142703",
+      "name": "Produit 36142703",
+      "brand": "Marque Inconnue",
+      "type": "Produit",
+      "price": 49.99,
+      "original_price": null,
+      "description": "Produit identifié par EAN: 3614270357637",
+      "image": "https://via.placeholder.com/300x300/e0e0e0/666666?text=Produit",
+      "category": "Produits > Divers",
+      "material": "Matériaux standards",
+      "search_type": "EAN",
+      "search_term": "3614270357637",
+      "created_at": "2025-08-06T09:17:51.877800"
+    },
+    "sheet": {
+      "id": "656da7fd-588a-436f-b6a7-7e0cdf103b14",
+      "product_id": "e5709aa0-2a6e-476c-a2a1-30dbb5c625b6",
+      "category": "Produits > Divers",
+      "weight": 0.3,
+      "variations": [
+        {
+          "option": "Standard",
+          "stock": 25,
+          "ean": "3614270357637"
+        },
+        {
+          "option": "Premium",
+          "stock": 15,
+          "ean": "3614270357639"
+        }
+      ],
+      "characteristics": {
+        "Matière": "Matériaux standards",
+        "Qualité": "Norme européenne",
+        "Garantie": "2 ans constructeur"
+      },
+      "seo_title": "Marque Inconnue Produit - Produit",
+      "seo_description": "Achetez Produit 36142703 Marque Inconnue à 49.99€. Produit identifié par EAN: 3614270357637. Livraison gratuite.",
+      "url_slug": "marque-inconnue-produit-sku36142703",
+      "visibility": "both",
+      "available_for_order": true,
+      "condition": "new",
+      "created_at": "2025-08-06T09:17:51.877835"
+    }
   }
 ]
